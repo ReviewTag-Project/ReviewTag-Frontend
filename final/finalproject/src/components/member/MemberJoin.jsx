@@ -19,6 +19,14 @@ export default function member(){
         memberPost : "", memberAddress1 : "", memberAddress2 : ""
     });
 
+    // 출력할 피드백
+    const [memberIdFeedback, setmemberIdFeedback] = useState("");
+    const [memberPwFeedback, setmemberPwFeedback] = useState("");
+    const [memberNicknameFeedback, setmemberNicknameFeedback] = useState("");
+    const [memberEmailFeedback, setmemberEmailFeedback] = useState("");
+
+
+
     // callback
     const changeStrValue = useCallback(e=>{
         const {name, value} = e.target;
@@ -31,23 +39,51 @@ export default function member(){
         setAccount(prev=>({...prev, accountBirth : replacement}));
     },[]);
 
+    //각 항목 검사 : feedback
+    ////////////////////////////////////
+    // 아이디
+    const checkMemberId = useCallback(async(e)=>{
+        const regex = /^[a-z][a-z0-9]{4,19}$/;
+        const valid = regex.test(member.memberId);
+        if(valid){ // 형식 통과
+            const {data} = await axios.get(`/member/memberId/${member.memberId}`)
+            if(data===true){ // 중복X
+                setMemberClass(prev=>({...prev,memberId : "is-valid"}));
+            }
+            else{ // 사용중 (ID중복)
+                setMemberClass(prev=>({...prev, memberId : "is-invalid"}));
+                setmemberIdFeedback("이미 사용중인 아이디입니다");
+            }
+        }
+        else { // 형식 오류
+            setMemberClass(prev=>({...prev, memberId : "is-invalid"}));
+            setmemberIdFeedback("영문 소문자로 시작하며, 숫자를 포함한 5-20자로 작성하세요");
+        }
+        
+        //필수항목
+        if(member.memberId.length===0){
+            setMemberClass(prev=>({...prev, memberId : "is-invalid"}));
+            setmemberIdFeedback("아이디는 필수 항목입니다");
+        }
+    },[member,memberClass])
+
 
 
     //memo
     // 모든 항목이 유효한지 검사(선택항목은 is-invalid가 아니어야함)
     const memberValid = useMemo(()=>{
-        //필수항목
-        // if(memberClass.memberId !== "is-valid") return false;
-        // if(memberClass.memberPw !== "is-valid") return false;
-        // if(memberClass.memberNickname !== "is-valid") return false;
-        // if(memberClass.memberEmail !== "is-valid") return false;
-        // //선택항목
-        // if(memberClass.memberBirth==="is-invalid") return false;
-        // if(memberClass.memberContact==="is-invalid") return false;
-        // if(memberClass.memberPost==="is-invalid") return false;
-        // if(memberClass.memberAddress1==="is-invalid") return false;
-        // if(memberClass.memberAddress2==="is-invalid") return false;
-        // return true;
+        필수항목
+        if(memberClass.memberId !== "is-valid") return false;
+        if(memberClass.memberPw !== "is-valid") return false;
+        if(memberClass.memberNickname !== "is-valid") return false;
+        if(memberClass.memberEmail !== "is-valid") return false;
+        //선택항목
+        if(memberClass.memberBirth==="is-invalid") return false;
+        if(memberClass.memberContact==="is-invalid") return false;
+        if(memberClass.memberPost==="is-invalid") return false;
+        if(memberClass.memberAddress1==="is-invalid") return false;
+        if(memberClass.memberAddress2==="is-invalid") return false;
+        return true;
     },[memberClass])
 
     //callback
@@ -73,7 +109,7 @@ export default function member(){
                             //onBlur={}
                             />
                 <div className="valid-feedback"></div>
-                <div className="invalid-feedback"></div>
+                <div className="invalid-feedback">{memberIdFeedback}</div>
             </div>
         </div>
 
@@ -87,7 +123,7 @@ export default function member(){
                             //onBlur={}
                             />
                 <div className="valid-feedback"></div>
-                <div className="invalid-feedback"></div>
+                <div className="invalid-feedback">{memberPwFeedback}</div>
             </div>
         </div>
         
@@ -101,7 +137,7 @@ export default function member(){
                             //onBlur={}
                             />
                 <div className="valid-feedback"></div>
-                <div className="invalid-feedback"></div>
+                <div className="invalid-feedback">{memberNicknameFeedback}</div>
             </div>
         </div>
         
@@ -115,7 +151,7 @@ export default function member(){
                             //onBlur={}
                             />
                 <div className="valid-feedback"></div>
-                <div className="invalid-feedback"></div>
+                <div className="invalid-feedback">{memberEmailFeedback}</div>
             </div>
         </div>
 
