@@ -1,8 +1,17 @@
+import axios from "axios";
 import { useCallback } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {useAtom} from "jotai";
 
 export default function MemberLogin(){
-
+    //통합 state
+    const [loginId , setLoginId] = useAtom();
+    const [loginLevel , setLoginLevel] = useAtom();
+    const [accessToken , setAccessToken] = useAtom();
+    const [refreshToken , setRefreshToken] = useAtom();
+    // 도구
+    const navigate = useNavigate();
     //state
     const [member, setMember] = useState({
         memberId : "", memberPw : ""
@@ -13,6 +22,31 @@ export default function MemberLogin(){
         const {name, value} = e.target;
         setMember(prev =>({...prev, [name] : value}));
     },[])
+
+    const [login, setLogin] = useState(null); // null 시도x -> true or false
+    const sendLogin = useCallback(async()=>{
+        try{
+            //로그인 시도
+            const {data} = await axios.post("/member/login", member);
+
+            // Authorization에 accesstoken 저장
+            axios.defaults.headers.common["Authorization"] = `Bearer ${data.accessToken}`;
+            //통합 state 저장
+            setLoginId();
+            setLoginLevel();
+            setAccessToken();
+            setRefreshToken();
+            // 화면이동
+            setLogin(true);
+            console.log("로그인 성공");
+            //navigate("/");
+        }
+        catch(err){
+            setLogin(false);
+            console.log("로그인 실패");
+        }
+    },[member])
+
 
     //render
     return(<>
@@ -40,7 +74,7 @@ export default function MemberLogin(){
         <div className="row mt-4">
             <div className="col">
                 <button type="button" className="btn btn-success w-100 btn-lg"
-                        //onClick={}
+                        onClick={sendLogin}
                         > 로그인
                 </button>
             </div>
