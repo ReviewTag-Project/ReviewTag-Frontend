@@ -1,6 +1,9 @@
+import { FaAsterisk, FaEraser, FaMagnifyingGlass } from "react-icons/fa6";
 import axios from "axios";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom"
+//Daum 우편번호/주소검색 API
+import { useDaumPostcodePopup } from 'react-daum-postcode';
 
 
 export default function member(){
@@ -214,6 +217,62 @@ export default function member(){
             setMemberClass({...memberClass, memberContact : valid ? "is-valid" : "is-invalid"});
         },[member, memberClass])
 
+    // 주소
+        const open = useDaumPostcodePopup("//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js");
+        const searchAddress = useCallback(()=>{
+            open({onComplete : (data)=>{
+                let addr = ''; // 주소 변수
+                
+                if (data.userSelectedType === 'R') { 
+                    addr = data.roadAddress;
+                } else { 
+                    addr = data.jibunAddress;
+                }
+                setMember(prev=>({
+                    ...prev,
+                    memberPost : data.zonecode, // 우편번호
+                    memberAddress1 : addr,  // 기본주소
+                    memberAddress2 : ""
+                }))
+                // 상세주소 입력창으로 포커스 이동
+                memberAddress2Ref.current.focus();
+            }});
+        },[])
+
+    // 상세주소 입력창을 제어할 ref
+    const memberAddress2Ref = useRef();
+
+    // 주소 초기화
+    const clearMemberAddress = useCallback(()=>{
+        setMember(prev=>({
+            ...prev, memberPost : "", memberAddress1 : "", memberAddress2 : ""
+        }))
+        setMemberClass(prev=>({
+            ...prev, memberPost : "", memberAddress1 : "", memberAddress2 : ""
+        }))
+    },[])
+
+    //주소 초기화 버튼이 표시되어야 하는지 판정
+    const hasAnyCharacter = useMemo(()=>{
+        if(member.memberPost.length > 0 ) return true;
+        if(member.memberAddress1.length > 0 ) return true;
+        if(member.memberAddress2.length > 0 ) return true;
+        return false;
+    },[member])
+    //주소 검사
+    const checkMemberAddress = useCallback((e)=>{
+        const {memberPost, memberAddress1, memberAddress2} = member;
+        const fill = memberPost.length > 0 && memberAddress1.length > 0 && memberAddress2.length > 0;
+        const empty = memberPost.length === 0 && memberAddress1.length === 0 && memberAddress2.length === 0;
+        const valid = fill || empty;
+        setMemberClass(prev=>({
+            ...prev,
+            memberPost : valid ? "is-valid" : "is-invalid",
+            memberAddress1 : valid ? "is-valid" : "is-invalid",
+            memberAddress2 : valid ? "is-valid" : "is-invalid"
+        }));
+    }, [member, memberClass]);
+
     //memo
     // 모든 항목이 유효한지 검사(선택항목은 is-invalid가 아니어야함)
     const memberValid = useMemo(()=>{
@@ -247,7 +306,7 @@ export default function member(){
 
         {/* 아이디 */}
         <div className="row mt-4">
-            <label className="col-sm-3 col-form-label">아이디</label>
+            <label className="col-sm-3 col-form-label">아이디<FaAsterisk className="text-danger"/></label>
             <div className="col-sm-9">
                 <input type="text" className={`form-control ${memberClass.memberId}`} 
                             name="memberId" value={member.memberId}
@@ -261,7 +320,7 @@ export default function member(){
 
         {/* 비밀번호 */}
         <div className="row mt-4">
-            <label className="col-sm-3 col-form-label">비밀번호</label>
+            <label className="col-sm-3 col-form-label">비밀번호<FaAsterisk className="text-danger"/></label>
             <div className="col-sm-9">
                 <input type="text" className={`form-control ${memberClass.memberPw}`} 
                             name="memberPw" value={member.memberPw}
@@ -288,7 +347,7 @@ export default function member(){
         
         {/* 닉네임 */}
         <div className="row mt-4">
-            <label className="col-sm-3 col-form-label">닉네임</label>
+            <label className="col-sm-3 col-form-label">닉네임<FaAsterisk className="text-danger"/></label>
             <div className="col-sm-9">
                 <input type="text" className={`form-control ${memberClass.memberNickname}`} 
                             name="memberNickname" value={member.memberNickname}
@@ -302,7 +361,7 @@ export default function member(){
         
         {/* 이메일 */}
         <div className="row mt-4">
-            <label className="col-sm-3 col-form-label">이메일</label>
+            <label className="col-sm-3 col-form-label">이메일<FaAsterisk className="text-danger"/></label>
             <div className="col-sm-9 d-flex flex-wrap text-nowrap" >
                 <input type="text" className={`form-control w-auto flex-grow-1 ${memberClass.memberEmail}`} 
                             name="memberEmail" value={member.memberEmail} inputMode="email"
@@ -363,7 +422,52 @@ export default function member(){
         </div>
         
         {/* 주소 (Post, Address1, Address2) */}
-        {/* ---------------------------- */}
+       <div className="row mt-3">
+            <label className="col-sm-3 col-form-label">주소</label>
+            <div className="col-sm-9 d-flex align-items-center text-nowrap">
+                <input type="text" name="memberPost" className={`form-control w-auto ${memberClass.memberPost}`}
+                            placeholder="우편번호" value={member.memberPost}
+                            onChange={changeStrValue} readOnly
+                            onClick={searchAddress}
+                            />
+                <button type="button" className="btn btn-secondary ms-2"
+                            onClick={searchAddress}
+                            >
+                    <FaMagnifyingGlass/>
+                </button>
+                {/* 지우기 버튼은 한글자라도 있으면 나와야 한다 */}
+                {hasAnyCharacter === true && (
+                    <button type="button" className="btn btn-danger ms-2" 
+                        onClick={clearMemberAddress}
+                        >
+                        <FaEraser/>
+                    </button>
+                    )}
+                <div className="valid-feedback" ></div>
+                <div className="invalid-feedback" ></div>
+            </div>
+
+            <div className="col-sm-9 offset-sm-3 mt-2">
+                <input type="text" name="memberAddress1" className={`form-control ${memberClass.memberAddress1}`}
+                    placeholder="기본주소" value={member.memberAddress1}
+                    onChange={changeStrValue} readOnly
+                    onClick={searchAddress}
+                    />
+                <div className="valid-feedback" ></div>
+                <div className="invalid-feedback" ></div>
+            </div>
+            <div className="col-sm-9 offset-sm-3 mt-2">
+                <input type="text" name="memberAddress2" className={`form-control ${memberClass.memberAddress2}`}
+                    placeholder="상세주소" value={member.memberAddress2}
+                    onChange={changeStrValue}
+                    ref={memberAddress2Ref}
+                    onBlur={checkMemberAddress}
+                     />
+                <div className="valid-feedback" ></div>
+                <div className="invalid-feedback" >주소는 모두 작성해야 합니다</div>
+            </div>
+       
+       </div>
         
         {/* 가입버튼  */}
         <div className="row mt-4">
