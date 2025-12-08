@@ -21,7 +21,7 @@ export default function Content() {
                         <Route path="/member/join" element={<MemberJoin/>}></Route>
 
                     {/* 리뷰 페이지 */}
-                        <Route path="/review/insert" element={<ReviewWrite/>}></Route>
+                        <Route path="/review/" element={<ReviewWrite/>}></Route>
                         <Route path="/review/search" element={<ReviewSearch/>}></Route>
                 </Routes>
             </div>
