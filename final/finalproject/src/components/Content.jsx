@@ -32,10 +32,14 @@ export default function Content() {
                     
                     {/* contents */}
                     <Route path="/contents/test" element={<Test/>}></Route>
-                    <Route path="/contents/test2" element={<SearchAndSave/>}></Route>
+                    <Route path="/contents/test2" element={<SearchAndSave/>}>
+                        <Route path="/contents/test2/review/:contentsId" element={<ReviewWrite/>}></Route>
+                    </Route>
+                    <Route path="/contents/test2" element={<SearchAndSave/>}>
+                      <Route path="/contents/test2/review/:contentsId" element={<ReviewWrite/>}></Route>
+                    </Route>
                     <Route path="/contents/genreList" element={<GenreList/>}></Route>
                     <Route path="/contents/genreList" element={<ContentsListByGenre/>}></Route>
-                    <Route path="/contents/test2/review" element={<ReviewWrite/>}></Route>
 
                     {/* 회원 페이지 */}
                     <Route path="/member/join" element={<MemberJoin/>}></Route>
