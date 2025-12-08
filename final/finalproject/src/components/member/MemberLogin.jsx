@@ -53,6 +53,7 @@ export default function MemberLogin(){
 
     //render
     return(<>
+
         <div className="row mt-4">
             <div className="col">
                 <h1>로그인</h1>
@@ -82,5 +83,6 @@ export default function MemberLogin(){
                 </button>
             </div>
         </div>
+
     </>)
 }
