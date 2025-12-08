@@ -14,10 +14,10 @@ export default function MemberMypage(){
     return(<>
 <div className="row mt-4">
     <div className="col d-flex justify-content-center flex-wrap">
-        <Link to="/member/mypage/myinfo" className="btn btn-secondary me-2 mt-2">내 정보</Link>
-        <Link to="/member/mypage/mymovie" className="btn btn-secondary me-2 mt-2">내 영화</Link>
-        <Link to="/member/mypage/myquiz" className="btn btn-secondary me-2 mt-2">내 퀴즈</Link>
-        <Link to="/member/mypage/myreview" className="btn btn-secondary me-2 mt-2">내 리뷰</Link>
+        <Link to={`/member/mypage/myinfo/${loginId}`} className="btn btn-secondary me-2 mt-2">내 정보</Link>
+        <Link to={`/member/mypage/mymovie/${loginId}`} className="btn btn-secondary me-2 mt-2">내 영화</Link>
+        <Link to={`/member/mypage/myquiz/${loginId}`} className="btn btn-secondary me-2 mt-2">내 퀴즈</Link>
+        <Link to={`/member/mypage/myreview/${loginId}`} className="btn btn-secondary me-2 mt-2">내 리뷰</Link>
     </div>
 </div>
 

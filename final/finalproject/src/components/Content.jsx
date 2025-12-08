@@ -15,6 +15,7 @@ import MemberMymovie from "./member/MemberMymovie";
 import MemberMyinfo from "./member/MemberMyinfo";
 import MemberMyreview from "./member/MemberMyreview";
 import MemberEdit from "./member/MemberEdit";
+import MemberEditPassword from "./member/MemberEditPassword";
 
 export default function Content() {
     return (<>
@@ -41,11 +42,12 @@ export default function Content() {
                     <Route path="/member/joinFinish" element={<MemberJoinFinish/>}></Route>
                     <Route path="/member/login" element={<MemberLogin/>}></Route>
                     <Route path="/member/edit/:loginId" element={<MemberEdit/>}></Route>
-                    <Route path="/member/mypage" element={<MemberMypage/>}>
+                    <Route path="/member/password/:loginId" element={<MemberEditPassword/>}></Route>
+                    <Route path="/member/mypage/" element={<MemberMypage/>}>
                         <Route path="/member/mypage/myinfo/:loginId" element={<MemberMyinfo/>}> </Route>
-                        <Route path="/member/mypage/myquiz" element={<MemberMyquiz/>}> </Route>
-                        <Route path="/member/mypage/mymovie" element={<MemberMymovie/>}> </Route>
-                        <Route path="/member/mypage/myreview" element={<MemberMyreview/>}> </Route>
+                        <Route path="/member/mypage/myquiz/:loginId" element={<MemberMyquiz/>}> </Route>
+                        <Route path="/member/mypage/mymovie/:loginId" element={<MemberMymovie/>}> </Route>
+                        <Route path="/member/mypage/myreview/:loginId" element={<MemberMyreview/>}> </Route>
                     </Route>
 
                     {/* 리뷰 페이지 */} 

@@ -57,7 +57,7 @@ export default function MemberMyinfo(){
         <div className="row mt-2">
             <div className="col">
                     <Link to={`/member/edit/${loginId}`} className="btn btn-secondary me-2">기본정보 수정</Link>
-                    <Link to="#" className="btn btn-secondary me-2">비밀번호 변경</Link>
+                    <Link to={`/member/password/${loginId}`} className="btn btn-secondary me-2">비밀번호 변경</Link>
                     <Link to="#" className="btn btn-danger">탈퇴</Link>
             </div>
         </div>
