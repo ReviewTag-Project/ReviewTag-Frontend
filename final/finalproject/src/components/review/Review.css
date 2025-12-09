@@ -29,7 +29,7 @@
 
 .rating-number {
     font-size: 35px;
-    color: #e94a00;
+    color: #ff836d;
     font-weight: bold;
     font-family: sans-serif;
     
@@ -44,7 +44,7 @@
 }
 
 .review-wrapper {
-    background-color: #f1f2f6;
+    background-color: #212529;
 }
 
 .border {
@@ -125,6 +125,10 @@ textarea:focus::placeholder {
     color: transparent;
 }
 
+.textAA::placeholder {
+    color: #afafaf !important;
+}
+
 .textAA {
     height: 200px;
     font-size: 20px !important;
@@ -132,6 +136,8 @@ textarea:focus::placeholder {
     resize: none !important;
     padding: 1em !important;
     margin-left: 0.5em !important;
+    color: #fff !important;
+    background-color: #353535 !important;
 }
 
 .textAA:focus {
