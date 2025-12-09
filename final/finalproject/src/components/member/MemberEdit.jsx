@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 //Daum 우편번호/주소검색 API
 import { useDaumPostcodePopup } from 'react-daum-postcode';
-import "./Member.css";
+
 export default function member(){
 
     const {loginId} = useParams();
@@ -145,13 +145,13 @@ export default function member(){
 
     //render
     return (<>
-        <div className="d-flex justify-content-center">
-        <div className="member-form ">
-        <h2>회원 기본정보 수정</h2>
 
+        <div className="member-form ">
+        <h2 className="text-center">회원 기본정보 수정</h2>
+        <hr/>
 
         {/* 생년월일 */}
-        <div className="row mt-4">
+        <div className="row">
             <label className="col-sm-3 col-form-label">생년월일</label>
             <div className="col-sm-9">
                 <input type="text" className={`form-control ${memberClass.memberBirth}`} 
@@ -239,6 +239,6 @@ export default function member(){
             </div>
         </div>
 </div>
-</div>
+
     </>)
 }

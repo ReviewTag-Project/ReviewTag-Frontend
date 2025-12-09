@@ -308,8 +308,8 @@ export default function member(){
     return (<>
         <div className="d-flex justify-content-center">
         <div className="member-form">
-        <h2>회원가입</h2>
-
+        <h2 className="text-center">회원가입</h2>
+        <hr/>
         {/* 아이디 */}
         <div className="row mt-4">
             <label className="col-sm-3 col-form-label">아이디<FaAsterisk className="text-danger"/></label>
