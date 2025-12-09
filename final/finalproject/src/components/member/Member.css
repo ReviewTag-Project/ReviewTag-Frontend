@@ -1,9 +1,8 @@
 /* 전체 회원가입 폼 */
 .member-form {
-  background: rgba(36, 36, 36, 0.85);
+  background: rgb(56, 56, 56);
   border-radius: 12px;
   padding: 2rem;
-  box-shadow: 0 0 20px rgba(190, 91, 91, 0.3);
   color: #ffffff;
   font-family: 'Arial', 'Helvetica', sans-serif;
 }
@@ -50,13 +49,13 @@
 
 /* 작은 버튼 (우편번호, 검색, 삭제 등) */
 .member-form .btn-secondary {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.5);
   border: none;
   color: #fff;
 }
 
 .member-form .btn-secondary:hover {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(150, 150, 150, 0.5);
   border: none;
 }
 

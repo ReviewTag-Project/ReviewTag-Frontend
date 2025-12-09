@@ -67,7 +67,7 @@ export default function MemberEditPassword(){
     //render
     return (<>
     <div className="d-flex justify-content-center">
-    <div className="member-form">
+    <div className="memberJoin-form">
         <h2>비밀번호 변경</h2>
 
 
