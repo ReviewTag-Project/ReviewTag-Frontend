@@ -53,12 +53,12 @@ export default function MemberLogin(){
 
     //render
     return(<>
+
         <div className="row mt-4">
             <div className="col">
                 <h1>로그인</h1>
             </div>
         </div>
-        
         <div className="row mt-4">
             <label className="col-sm-3 col-form-label">ID</label>
             <div className="col-sm-9">
@@ -82,5 +82,6 @@ export default function MemberLogin(){
                 </button>
             </div>
         </div>
+
     </>)
 }

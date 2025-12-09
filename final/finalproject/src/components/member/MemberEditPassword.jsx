@@ -2,7 +2,7 @@ import { FaAsterisk, FaEye, FaEyeSlash, FaUser } from "react-icons/fa6";
 import axios from "axios";
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
-
+import "./Member.css";
 
 export default function MemberEditPassword(){
     //도구
@@ -66,6 +66,8 @@ export default function MemberEditPassword(){
 
     //render
     return (<>
+    <div className="d-flex justify-content-center">
+    <div className="member-form">
         <h2>비밀번호 변경</h2>
 
 
@@ -115,7 +117,7 @@ export default function MemberEditPassword(){
                 </button>
             </div>
         </div>
-
-
+    </div>
+</div>
     </>)
 }
