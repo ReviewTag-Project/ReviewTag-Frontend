@@ -2,6 +2,7 @@ import './App.css'
 import { BrowserRouter } from "react-router-dom"
 import Content from "./components/Content"
 import Menu from './components/Menu'
+import MenuForSearch from './components/MenuForSearch'
 import { Bounce, ToastContainer } from "react-toastify"
 
 function App() {
@@ -11,11 +12,24 @@ function App() {
       {/* Router는 주소에 의한 화면 분할을 처리하는 도구이며 설정된 영역 내에서만 작동함 */}
       <BrowserRouter>
         <Menu/>
+        <MenuForSearch/>
+          <div className="row mt-5">
+            <div className="col">
+
+            </div>
+          </div>
+          <div className="row mt-5">
+            <div className="col">
+              
+            </div>
+          </div>
           <div className="container-fluid my-5 pt-5">
             <Content/>
           </div>
       </BrowserRouter>
       
+
+
       {/* 토스트 메세지 컨테이너 */}
       <ToastContainer
         position="bottom-right"
@@ -30,6 +44,7 @@ function App() {
         theme="colored"
         transition={Bounce}
       />
+
     </>
   )
 }

@@ -3,7 +3,8 @@
 
 
 export default function Home() {
-    return(<>
+
+    return (<>
         <div className="row mt-4">
             <div className="col">
                 <h1>홈 화면</h1>
