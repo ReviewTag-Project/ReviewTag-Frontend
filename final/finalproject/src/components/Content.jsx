@@ -7,6 +7,7 @@ import MemberJoinFinish from "./member/MemberJoinFinish";
 import MemberLogin from "./member/MemberLogin";
 import ReviewWrite from "./review/ReviewWrite";
 import ReviewUpdate from "./review/ReviewUpdate";
+import ReviewUpdate2 from "./review/ReviewUpdate2";
 import NeedPermission from "./error/NeedPermission";
 import TargetNotfound from "./error/TargetNotfound";
 import WriteReview from "./review/WriteReview";
@@ -42,6 +43,7 @@ export default function Content() {
                     
                     {/* contents */}
                     <Route path="/contents/test" element={<Test/>}></Route>
+                    {/* 컨텐츠 검색 후 리뷰 */}
                     <Route path="/contents/test2" element={<SearchAndSave/>}> 
                         <Route path="/contents/test2/review/:contentsId" element={<ReviewWrite/>}></Route>
                     </Route>
@@ -74,6 +76,7 @@ export default function Content() {
                     {/* 리뷰 페이지 */} 
                     <Route path="/review/insert" element={<ReviewWrite/>}></Route>
                     <Route path="/review/:reviewNo" element={<ReviewUpdate/>}></Route>
+                    <Route path="/review2/:reviewNo" element={<ReviewUpdate2/>}></Route>
 
                     {/* 보류 */}
                     <Route path="/review/search" element={<ReviewSearch/>}></Route>
