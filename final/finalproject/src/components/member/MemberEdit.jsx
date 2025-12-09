@@ -147,11 +147,11 @@ export default function member(){
     return (<>
         <div className="d-flex justify-content-center">
         <div className="member-form ">
-        <h2>회원 기본정보 수정</h2>
-
+        <h2 className="text-center">회원 기본정보 수정</h2>
+        <hr/>
 
         {/* 생년월일 */}
-        <div className="row mt-4">
+        <div className="row">
             <label className="col-sm-3 col-form-label">생년월일</label>
             <div className="col-sm-9">
                 <input type="text" className={`form-control ${memberClass.memberBirth}`} 

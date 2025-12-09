@@ -67,12 +67,12 @@ export default function MemberEditPassword(){
     //render
     return (<>
     <div className="d-flex justify-content-center">
-    <div className="memberJoin-form">
-        <h2>비밀번호 변경</h2>
-
+    <div className="member-form">
+        <h2 className="text-center">비밀번호 변경</h2>
+        <hr/>
 
         {/* 비밀번호 */}
-        <div className="row mt-4">
+        <div className="row">
             <label className="col-sm-3 col-form-label">
                     비밀번호<FaAsterisk className="text-danger"/>
                 {showPassword === true ? (
