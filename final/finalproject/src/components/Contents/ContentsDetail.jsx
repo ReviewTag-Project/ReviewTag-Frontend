@@ -1,9 +1,15 @@
 import axios from "axios";
 import { useCallback, useEffect, useMemo, useState } from "react";
+
+import { FaBookmark, FaChevronUp, FaHeart, FaPencil } from "react-icons/fa6";
+import { FaQuestion } from "react-icons/fa";
+import { useNavigate, useParams, Outlet, useLocation } from "react-router-dom";
+
 import { FaBookmark, FaCheck, FaHeart, FaPencil, FaStar } from "react-icons/fa6";
 import { FaQuestion } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import { FcMoneyTransfer } from "react-icons/fc";
+
 import "./SearchAndSave.css"
 import { useAtom } from "jotai";
 import { loginIdState } from "../../utils/jotai";
@@ -27,8 +33,15 @@ export default function ContentsDetail() {
     const {contentsId} = useParams();
     const navigate = useNavigate();
 
+
+    const location = useLocation();
+
+    //현재 위치가 /contents/detail/:contentsId/quiz인지 확인
+    const isQuizOpen = location.pathname.includes('/quiz');
+
     // 북마크 확인용 state
     const [hasWatchlist, setHasWatchList] = useState(false);
+
 
     //영화 정보 state
     const [contentsDetail, setContentsDetail] = useState(INITIAL_DETAIL);
@@ -160,6 +173,18 @@ export default function ContentsDetail() {
             navigate(`/review/write/${contentsDetail.contentsId}`);
         }
     }, [navigate, isLoading, contentsDetail.contentsId]);
+    
+    //퀴즈 버튼
+    const goToQuiz = () => {
+        if (isQuizOpen) {
+            // 이미 열려있으면 -> 닫기
+            navigate(`/contents/detail/${contentsId}`);
+        } else {
+            // 닫혀있으면 -> 열기
+            navigate(`quiz`);
+        }
+    };
+
 
     const toggleSpoiler = () => {
         setShowSpoiler(true);
@@ -250,7 +275,27 @@ export default function ContentsDetail() {
                         <button className="btn btn-warning ms-2"><FaQuestion className="mb-1 me-1" /> 퀴즈</button>
                     </div>
                 </div>
-            )}
+                <div className="text-end mb-3">
+                    <button className="btn btn-success" onClick={writeReview}><FaPencil className="mb-1 me-1"/>리뷰등록</button>
+                    <button className="btn btn-warning ms-2" onClick={goToQuiz}>
+                        {isQuizOpen ? (
+                                <>
+                                    <FaChevronUp className="mb-1 me-1" /> 퀴즈 닫기
+                                </>
+                            ) : (
+                                <>
+                                    <FaQuestion className="mb-1 me-1" /> 퀴즈 풀기
+                                </>
+                            )}
+                    </button>
+                </div>    
+            </div>
+
+            {/* 중첩 라우팅 자리 */}
+            <div className="mt-4">
+                    <Outlet />
+                </div>
+            </> 
 
             {/* 리뷰 목록 */}
             {!isLoading && reviewList && (
