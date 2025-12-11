@@ -10,6 +10,7 @@ import { FaHeart } from "react-icons/fa";
 import { FaShare } from "react-icons/fa6";
 import { IoHeartCircleSharp } from "react-icons/io5";
 
+
 const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
 const INITIAL_DETAIL = {
