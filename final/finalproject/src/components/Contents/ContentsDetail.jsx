@@ -326,7 +326,7 @@ export default function ContentsDetail() {
                                     <div>방영일 : {formattedDate}</div>
                                     <div>평점 : {contentsDetail.contentsVoteAverage.toFixed(1)} / 10</div>
                                     <div className="mt-4 text-center">
-                                        <div className="d-inline-flex align-items-center justify-content-center px-4 py-2 rounded-pill like-wrapper">
+                                        <div className="d-inline-flex align-items-center justify-content-center px-4 py-2 rounded-pill">
                                             <FaRegEye className="me-2 text-info fs-3" />
                                             <span className="fw-bold fs-5">{contentsDetail.contentsLike.toLocaleString()}</span>
                                         </div>
