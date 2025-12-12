@@ -23,6 +23,9 @@ export default function MemberMypage(){
         setAddQuizList(addList.data);
         const rateList = await axios.get(`/member/myanswerRate/${loginId}`);
         setAnswerQuizRate(rateList.data);
+
+        console.log(addList);
+        console.log(answerList);
     },[loginId]);
 
    
@@ -36,39 +39,41 @@ export default function MemberMypage(){
         
         {/* 나의 퀴즈 기록 통계 */}
         <div className="card border-0 shadow-sm quiz-dark-card">
-            <div className="card-header fw-bold border-0 pt-3 stats-header-dark text-center">
+            <div className="card-header fw-bold border-0 stats-header-dark text-center p-3 fs-5">
                 <FaChartBar className="me-2" />
                 나의 퀴즈 기록
             </div>
             <div className="card-body">
                 <div className="row text-center text-light">
                     <div className="col-5">
-                        <h5>콘텐츠</h5>
-                    </div>
-                    <div className="col-2 ">
-                        <h5>정답</h5>
+                        <span className="fs-5">콘텐츠</span>
                     </div>
                     <div className="col-2">
-                        <h5>오답</h5>
+                        <span className="fs-5">정답</span>
+                    </div>
+                    <div className="col-2">
+                        <span className="fs-5">오답</span>
                     </div>
                     <div className="col-3">
-                        <h5 >정답률</h5>
+                        <span className="fs-5">정답률</span>
                     </div>
                 </div>
                 <hr/>
                 {answerQuizRate.map((answerQuizRate,index)=>(
-                    <div className="row text-center mt-2" key={index}>
-                        <div className="col-5 text-truncate">
-                            <Link className="quiz-link" to={`/contents/detail/${answerQuizRate.quizContentsId}`}>{answerQuizRate.contentsTitle}</Link>
+                <div className="row text-center mt-2" key={index}>
+                    <div className="col-5 text-truncate">
+                        <Link className="quiz-link" to={`/contents/detail/${answerQuizRate.quizContentsId}`}>{answerQuizRate.contentsTitle}</Link>
+                    </div>
+                    <div className="col-2">
+                        {answerQuizRate.correctCount}
+                    </div>
+                    <div className="col-2">
+                        {answerQuizRate.wrongCount}
+                    </div>
+                    <div className="col-3 p-0 fs-bold rate-bar">
+                        <div className="rate-fill fs-6 text-dark" style={{ width: `${answerQuizRate.correctRate * 100}%` }}>
+                            {(answerQuizRate.correctRate*100).toFixed(2)} % 
                         </div>
-                        <div className="col-2">
-                            {answerQuizRate.correctCount}
-                        </div>
-                        <div className="col-2">
-                            {answerQuizRate.wrongCount}
-                        </div>
-                        <div className="col-3 fs-bold">
-                            {answerQuizRate.correctRate*100} % 
                     </div>
                 </div>
                 ))}
@@ -78,7 +83,7 @@ export default function MemberMypage(){
 
         <div className="mt-4 card quiz-dark-card text-center">
 
-            <div className="card-header fw-bold border-0 pt-3 stats-header-dark">
+            <div className="card-header fw-bold border-0 stats-header-dark p-3 fs-5">
                 내가 푼 퀴즈
             </div>
             <div className="table-responsive">
@@ -87,8 +92,8 @@ export default function MemberMypage(){
                     <tr className="text-truncate">
                         <th  className="quiz-table-thead">콘텐츠</th>
                         <th  className="quiz-table-thead">문제</th>
-                        <th  className="quiz-table-thead quiz-table-thead-ex" >정답여부</th>
-                        <th  className="quiz-table-thead">정답률</th>
+                        <th  className="quiz-table-thead quiz-table-thead-ex">정답여부</th>
+                        <th  className="quiz-table-thead quiz-table-thead-ex">정답률</th>
                     </tr>
                 </thead>
                 <tbody >
@@ -97,15 +102,17 @@ export default function MemberMypage(){
                             <td className="quiz-normal text-truncate">
                                 <Link className="quiz-link" to={`/contents/detail/${answerQuiz.quizContentsId}`}>{answerQuiz.contentsTitle}</Link>
                             </td>
-                            <td className="text-truncate quiz-question">{answerQuiz.quizQuestion}</td>
-
-                                {answerQuiz.quizLogIsCorrect==="Y" ? (
-                                    <td className="quiz-option quiz-correct">O</td>
-                                ) : (
-                                    <td className="quiz-option quiz-wrong">X</td>
-                                )}
-
-                            <td className="quiz-normal">{answerQuiz.correctRate * 100}%</td>
+                            <td className="text-truncate quiz-question">
+                                <Link className="quiz-link text-white" to={`/member/mypage/quiz/detail/${answerQuiz.quizContentsId}`}>{answerQuiz.quizQuestion}</Link>
+                            </td>
+                            {answerQuiz.quizLogIsCorrect==="Y" ? (
+                                <td className="quiz-option quiz-correct">O</td>
+                            ) : (
+                                <td className="quiz-option quiz-wrong">X</td>
+                            )}
+                            <td className="rate-bar ">
+                                <div className="rate-fill fs-6 text-light d-flex text-nowrap" style={{ width: `${answerQuiz.correctRate * 100}%` }}>{(answerQuiz.correctRate * 100).toFixed(2)}%</div>
+                            </td>
                         </tr>
                     ))}
                     </tbody>
@@ -115,26 +122,26 @@ export default function MemberMypage(){
     </div>
 
         <div className="mt-4 card quiz-dark-card text-center">
-            <div className="card-header fw-bold border-0 pt-3 stats-header-dark">
+            <div className="card-header fw-bold border-0 stats-header-dark p-3 fs-5">
                 내가 등록한 퀴즈
             </div>
             <div className="table-responsive">
-                <table className="table table-hover table-striped">
+                <table className="table">
                     <thead>
                         <tr className="text-truncate quiz-table-thead">
                             <th className="quiz-table-thead">문제</th>
                             <th className="quiz-table-thead">풀이횟수</th>
                             <th className="quiz-table-thead quiz-table-thead-ex">보기</th>
-                            <th className="quiz-table-thead">정답률</th>
+                            <th className="quiz-table-thead quiz-table-thead-ex">정답률</th>
                         </tr>
                     </thead>
                     <tbody >
                         {addQuizList.map((addQuiz)=>(
                             <tr key={addQuiz.quizId}>
                                 <td className="text-truncate quiz-question">
-                                   <Link className="quiz-link fs-4" to={`/contents/detail/${addQuiz.quizContentsId}`}> [ {addQuiz.contentsTitle} ]</Link> 
+                                   <Link className="quiz-link fs-5" to={`/contents/detail/${addQuiz.quizContentsId}`}> [ {addQuiz.contentsTitle} ]</Link> 
                                     <br/>
-                                    {addQuiz.quizQuestion}
+                                    <Link className="quiz-link fs-6 text-white" to={`/member/mypage/quiz/detail/${addQuiz.quizContentsId}`}> {addQuiz.quizQuestion}</Link> 
                                 </td>
                                 <td className="quiz-normal">{addQuiz.quizSolveCount}</td>
                                 <td className={`text-truncate ${addQuiz.quizAnswer==="1" ? "quiz-answer" : "quiz-option"}`}>{addQuiz.quizQuestionOption1}</td>
