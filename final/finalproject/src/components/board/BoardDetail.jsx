@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 
 
 
@@ -23,6 +23,10 @@ export default function BoardDetail(){
         setBoard(data);
     },[])
 
+    const deleteBoard = useCallback(()=>{
+
+    },[])
+
     //rendar
     return (<>
         <div className="row">
@@ -38,6 +42,13 @@ export default function BoardDetail(){
         {board.boardWriter}<br/>
         {board.boardText}<br/>
 
+        <div className="row mt-2">
+            <div className="col">
+                <Link className="btn btn-secondary me-2" to="/board/list">전체목록</Link>
+                <Link className="btn btn-secondary me-2" to={`/board/edit/${board.boardNo}`}>수정</Link>
+                <button type="button" className="btn btn-secondary" onClick={deleteBoard}>삭제</button>
+            </div>
+        </div>
     </>)
 
 
