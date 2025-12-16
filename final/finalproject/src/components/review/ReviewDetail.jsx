@@ -125,6 +125,11 @@ export default function ReviewDetail() {
         fetchReview();
     }, [reviewNo, contentsId, accessToken]);
 
+    const nowKST = new Date(
+        new Date().getTime() + 9 * 60 * 60 * 1000
+    ).toISOString(); // 리뷰 수정 시간 / 한국시간 보정
+
+
 
     const loadContentData = useCallback(async () => {
         if (!contentsId) return;
@@ -342,17 +347,16 @@ export default function ReviewDetail() {
             reviewRating: review.reviewRating,
             reviewSpoiler: review.reviewSpoiler,
             reviewPrice: review.reviewPrice
-            // reviewEtime: new Date().toISOString()
         }
 
         axios.patch(`/review/${contentsId}/${reviewNo}`, payload)
             .then(() => {
                 toast.success("리뷰 수정 완료");
-                setReviewView(true);
                 setReview(prev => ({
                     ...prev,
-                    // reviewEtime: payload.reviewEtime
-                }))
+                    reviewEtime: nowKST
+                }));
+                setReviewView(true);
             })
             .catch(err => {
                 toast.error("수정 도중 오류가 발생했습니다");
@@ -406,6 +410,11 @@ export default function ReviewDetail() {
                         )}
                         <span><FaStar className="littleStar me-1 mb-1" />{reviewDate}</span>
                         <span className="ms-3"><FcMoneyTransfer className="me-2" />{price.toLocaleString()} 원</span>
+                        {review.reviewEtime && (
+                            <span className="ms-3" style={{ color: "#b1b1b1ff" }}>(수정됨)</span>
+                        )}
+
+
                     </div>
                     <hr className="HR" />
                     {isSpoiler && (
@@ -484,7 +493,7 @@ export default function ReviewDetail() {
                                 <div className="mt-1 ms-3 input-group price-wrapper2 text-center w-25">
                                     <input type="text" inputMode="numerice"
                                         className="price form-control price-bar text-light"
-                                        value={price.toLocaleString()}  onChange={changeNum} />
+                                        value={price.toLocaleString()} onChange={changeNum} />
                                     <span className="input-group-text price-label text-light">원</span>
                                 </div>
                             </div>

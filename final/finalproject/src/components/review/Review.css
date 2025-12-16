@@ -402,7 +402,7 @@ textAA:focus::placeholder {
 }
 
 .tv {
-    color: gray;
+    color: rgb(139, 139, 139);
     font-weight: 500;
     font-size: 16px;
 }
