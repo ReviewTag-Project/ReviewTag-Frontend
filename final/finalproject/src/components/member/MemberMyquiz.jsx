@@ -26,6 +26,7 @@ export default function MemberMypage(){
 
     //callback 
     const loadData = useCallback(async()=>{
+        if (!loginId)  return; 
         const answerList = await axios.get(`/member/myanswerquiz/${loginId}/${answerPage}`);
         setAnswerQuizList(answerList.data.list);
         setAnswerPageData(answerList.data.pageVO);
