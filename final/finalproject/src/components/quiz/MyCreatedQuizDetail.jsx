@@ -24,29 +24,14 @@ export default function MyCreatedQuizDetail() {
     //데이터 로드
     useEffect(() => {
         const fetchQuizDetail = async () => {
-            const token = sessionStorage.getItem('accessTokenState');
-
-            if (!token) {
-                await Swal.fire({
-                    icon: 'warning',
-                    title: '로그인 필요',
-                    text: '접근 권한이 없습니다. 로그인 해주세요.'
-                });
-                navigate('/member/login');
-                return;
-            }
 
             try {
-                const res = await axios.get(`/quiz/${quizId}`, {
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
-                });
-                const data = res.data;
-                setQuizData(data);
+                //const res = await axios.get(`/quiz/${quizId}`);
+                const quizDetail = await quizApi.getQuizDetail(quizId);
+                setQuizData(quizDetail);
 
                 //삭제된 퀴즈라면 돌아가게 하기
-                if (data.quizStatus === 'DELETED') {
+                if (quizDetail.quizStatus === 'DELETED') {
                     await Swal.fire({
                         icon: 'error',
                         title: '삭제된 퀴즈',
@@ -57,23 +42,23 @@ export default function MyCreatedQuizDetail() {
                 }
 
                 const options = [];
-                if (data.quizQuestionType === 'OX') {
+                if (quizDetail.quizQuestionType === 'OX') {
                     // OX 퀴즈
                     options.push({ no: 1, content: 'O', icon: <FaRegCircle /> });
                     options.push({ no: 2, content: 'X', icon: <FaXmark /> });
                 } else {
                     // 4지선다
-                    if (data.quizQuestionOption1) options.push({ no: 1, content: data.quizQuestionOption1 });
-                    if (data.quizQuestionOption2) options.push({ no: 2, content: data.quizQuestionOption2 });
-                    if (data.quizQuestionOption3) options.push({ no: 3, content: data.quizQuestionOption3 });
-                    if (data.quizQuestionOption4) options.push({ no: 4, content: data.quizQuestionOption4 });
+                    if (quizDetail.quizQuestionOption1) options.push({ no: 1, content: quizDetail.quizQuestionOption1 });
+                    if (quizDetail.quizQuestionOption2) options.push({ no: 2, content: quizDetail.quizQuestionOption2 });
+                    if (quizDetail.quizQuestionOption3) options.push({ no: 3, content: quizDetail.quizQuestionOption3 });
+                    if (quizDetail.quizQuestionOption4) options.push({ no: 4, content: quizDetail.quizQuestionOption4 });
                 }
 
                 setOptionList(options);
             } catch (error) {
                 console.error(error);
                 Swal.fire("오류", "퀴즈 정보를 불러오지 못했습니다.", "error");
-                //navigate(-1);
+                navigate(-1);
             } finally {
                 setLoading(false);
             }
@@ -99,14 +84,11 @@ export default function MyCreatedQuizDetail() {
             try {
                 const token = sessionStorage.getItem('accessTokenState');
 
-                const res = await axios.delete(`/quiz/${quizId}`, {
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
-                });
+                //const res = await axios.delete(`/quiz/${quizId}`);
+                const res = await quizApi.deleteQuiz(quizId);
 
                 await Swal.fire('삭제 완료', '퀴즈가 삭제되었습니다.', 'success');
-                //navigate(-1);
+                navigate(-1);
             } catch (error) {
                 console.error(error);
                 Swal.fire('실패', '삭제 권한이 없거나 오류가 발생했습니다.', 'error');
@@ -142,7 +124,7 @@ export default function MyCreatedQuizDetail() {
                     className="btn btn-outline-light me-3"
                     onClick={() => navigate(-1)}
                 >
-                    <FaArrowLeft /> 목록으로
+                    <FaArrowLeft /> 이전으로
                 </button>
                 <h3 className="mb-0 fw-bold">✍️ 퀴즈 상세페이지</h3>
             </div>

@@ -21,10 +21,10 @@ export default function AdminQuizPage() {
 
         setLoading(true);
         try {
-            const res = await axios.get(`/admin/quizzes/reports`, {
+            const { data } = await axios.get(`/admin/quizzes/reports`, {
                 params: { status: currentTab }
             });
-            setQuizList(res.data);
+            setQuizList(data);
         } catch (error) {
             console.error("목록 로딩 실패", error);
         }
@@ -41,7 +41,7 @@ export default function AdminQuizPage() {
         <div className="admin-quiz-container">
             
             {/* 1. 헤더 영역 */}
-            <div className="admin-page-header d-flex justify-content-between align-items-center">
+            <div className="admin-page-header d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <h3 className="admin-title mb-0">
                     👮‍♀️ 퀴즈 신고 관리
                 </h3>
@@ -59,6 +59,14 @@ export default function AdminQuizPage() {
                         onClick={() => setCurrentTab('active')}
                     >
                         🚨 접수된 신고 <span className="badge bg-danger ms-1 rounded-pill">Active</span>
+                    </button>
+                </li>
+                <li className="nav-item">
+                    <button 
+                        className={`nav-link ${currentTab === 'blind' ? 'blind' : ''}`}
+                        onClick={() => setCurrentTab('blind')}
+                    >
+                        🥊 블라인드된 신고
                     </button>
                 </li>
                 <li className="nav-item">

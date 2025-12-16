@@ -18,6 +18,7 @@ export default function MemberMycontent() {
 
     //callback
     const loadData = useCallback(async () => {
+        if (!loginId)  return; 
         const { data } = await axios.get(`/member/mywatch/${loginId}`)
         setMyWatchlist(data);
         if (data.length !== 0) {
@@ -38,7 +39,7 @@ export default function MemberMycontent() {
             await axios.delete(`/watchlist/${contentsId}/${loginId}`);
             console.log("삭제성공");
             toast.success("찜목록이 삭제되었습니다");
-            loadData()
+            loadData();
         }
         catch (err) {
             console.error(err);
@@ -49,6 +50,7 @@ export default function MemberMycontent() {
 
     // 북마크 TYPE 변경 함수 (찜 ->favorite)
     const changeWatchlistType = useCallback(async (contentsId) => {
+        
         const choice = window.confirm("인생작품으로 등록하시겠습니까?");
         if (choice === false) return;
 

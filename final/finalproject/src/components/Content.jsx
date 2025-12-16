@@ -36,8 +36,10 @@ import AdminMain from "./admin/AdminMain";
 import AdminMemberPage from "./admin/AdminMemberPage";
 import AdminMemberDetail from "./admin/AdminMemberDetail";
 import MyCreatedQuizDetail from "./quiz/MyCreatedQuizDetail";
-
-
+import BoardInsert from "./board/BoardInsert";
+import BoardList from "./board/BoardList";
+import BoardContentsList from "./board/BoardContentsList";
+import BoardDetail from "./board/BoardDetail";
 
 export default function Content() {
     return (<>
@@ -73,6 +75,11 @@ export default function Content() {
                     {/* 회원 페이지 */}
                     <Route path="/point/main" element={<PointMain/>}></Route>
 
+                    {/* 게시글 페이지 */}
+                    <Route path="/board/list" element={<BoardList/>}></Route>
+                    <Route path="/board/List/:contentsId" element={<BoardContentsList/>}></Route>
+                    <Route path="/board/insert" element={<BoardInsert/>}></Route>
+                    <Route path="/board/:boardNo" element={<BoardDetail/>}></Route>
 
 
                     {/* 회원 페이지 */}
@@ -115,14 +122,11 @@ export default function Content() {
 
                     {/* 관리자 페이지 */}
                     <Route path="/admin" element={<AdminMain />}>
-                    {/* /admin 으로 접속하면 기본으로 회원관리 보여주기 (선택사항) */}
-                        <Route index element={<div className="text-center text-white">관리자 메인 대시보드</div>} />
-          
-                        {/* /admin/quiz 접속 시 -> AdminLayout의 <Outlet/> 자리에 AdminQuizPage가 뜸 */}
-                        <Route path="quiz" element={<AdminQuizPage />} />
-                        <Route path="member" element={<AdminMemberPage />} />
-                        <Route path="member/:memberId" element={<AdminMemberDetail />} />
+                        <Route index element={<AdminMemberPage/>}></Route>
+                        <Route path="/admin/member" element={<AdminMemberPage />} />
                         {/* <Route path="review" element={<AdminReviewPage />} /> */}
+                        <Route path="/admin/member/:memberId" element={<AdminMemberDetail />} />
+                        <Route path="/admin/quiz" element={<AdminQuizPage />} />
                         {/* <Route path="point" element={<AdminPointPage />} /> */}
                     </Route>
                 </Routes>

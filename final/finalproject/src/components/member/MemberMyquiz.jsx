@@ -1,9 +1,10 @@
 import { useAtom } from "jotai";
 import { loginIdState, loginNicknameState } from "../../utils/jotai";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { FaChartBar } from "react-icons/fa";
+import Pagination from "../Pagination";
 
 export default function MemberMypage(){
     const [loginId, setLoginId] = useAtom(loginIdState);
@@ -13,22 +14,29 @@ export default function MemberMypage(){
     const [answerQuizList, setAnswerQuizList] = useState([]);
     const [answerQuizRate, setAnswerQuizRate] = useState([]);
     const [addQuizList, setAddQuizList] = useState([]);
-    
+    // 페이지네이션을 위한 설정
+    const [answerPage, setAnswerPage] = useState(1);
+    const [answerPageData, setAnswerPageData] = useState({
+        page : 1,size : 10,  totalCount : 0, totalPage : 0, blockStart : 1, blockFinish : 1
+    });
+    const [addPage, setAddPage] = useState(1);
+    const [addPageData, setAddPageData] = useState({
+        page : 1,size : 10,  totalCount : 0, totalPage : 0, blockStart : 1, blockFinish : 1
+    });
 
     //callback 
     const loadData = useCallback(async()=>{
-        const answerList = await axios.get(`/member/myanswerquiz/${loginId}`);
-        setAnswerQuizList(answerList.data);
-        const addList = await axios.get(`/member/myaddquiz/${loginId}`);
-        setAddQuizList(addList.data);
+        if (!loginId)  return; 
+        const answerList = await axios.get(`/member/myanswerquiz/${loginId}/${answerPage}`);
+        setAnswerQuizList(answerList.data.list);
+        setAnswerPageData(answerList.data.pageVO);
+        const addList = await axios.get(`/member/myaddquiz/${loginId}/${addPage}`);
+        setAddQuizList(addList.data.list);
+        setAddPageData(addList.data.pageVO);
         const rateList = await axios.get(`/member/myanswerRate/${loginId}`);
         setAnswerQuizRate(rateList.data);
+    },[loginId, addPage, answerPage]);
 
-        console.log(addList);
-        console.log(answerList);
-    },[loginId]);
-
-   
     useEffect(()=>{
         loadData();
     },[loadData]);
@@ -73,8 +81,10 @@ export default function MemberMypage(){
                     </div>
                     <div className="col-3 p-0 fs-bold rate-bar">
                         <div className="rate-fill fs-6 text-dark" style={{ width: `${answerQuizRate.correctRate * 100}%` }}>
-                            {(answerQuizRate.correctRate*100).toFixed(2)} % 
                         </div>
+                        <span className="rate-text">
+                            {(answerQuizRate.correctRate * 100).toFixed(2)}%
+                        </span>
                     </div>
                 </div>
                 ))}
@@ -83,9 +93,20 @@ export default function MemberMypage(){
 
 
         <div className="mt-4 card quiz-dark-card text-center">
-
-            <div className="card-header fw-bold border-0 stats-header-dark p-3 fs-5">
-                내가 푼 퀴즈
+            <div className="card-header fw-bold border-0 p-3 fs-5">
+                내가 풀이한 퀴즈
+            </div>
+             {/* 페이지네이션 */}
+            <div className ="row mt-1">
+                <div className="col-6 offset-3">
+                     <Pagination
+                        page={answerPage}
+                        totalPage={answerPageData.totalPage}
+                        blockStart={answerPageData.blockStart}
+                        blockFinish={answerPageData.blockFinish}
+                        onPageChange={setAnswerPage}
+                    />
+                </div>
             </div>
             <div className="table-responsive">
             <table className="table">
@@ -104,7 +125,7 @@ export default function MemberMypage(){
                                 <Link className="quiz-link" to={`/contents/detail/${answerQuiz.quizContentsId}`}>{answerQuiz.contentsTitle}</Link>
                             </td>
                             <td className="text-truncate quiz-question">
-                                <Link className="quiz-link text-white" to={`/member/mypage/quiz/detail/${answerQuiz.quizContentsId}`}>{answerQuiz.quizQuestion}</Link>
+                                <Link className="quiz-link text-white" to={`/member/mypage/quiz/detail/${answerQuiz.quizLogQuizId}`}>{answerQuiz.quizQuestion}</Link>
                             </td>
                             {answerQuiz.quizLogIsCorrect==="Y" ? (
                                 <td className="quiz-option quiz-correct">O</td>
@@ -112,7 +133,8 @@ export default function MemberMypage(){
                                 <td className="quiz-option quiz-wrong">X</td>
                             )}
                             <td className="rate-bar ">
-                                <div className="rate-fill fs-6 text-light d-flex text-nowrap" style={{ width: `${answerQuiz.correctRate * 100}%` }}>{(answerQuiz.correctRate * 100).toFixed(2)}%</div>
+                                <div className="rate-fill fs-6d-flex text-nowrap" style={{ width: `${answerQuiz.correctRate * 100}%` }}>{(answerQuiz.correctRate * 100).toFixed(2)}%</div>
+                                <span className="rate-text"></span>
                             </td>
                         </tr>
                     ))}
@@ -123,8 +145,20 @@ export default function MemberMypage(){
     </div>
 
         <div className="mt-4 card quiz-dark-card text-center">
-            <div className="card-header fw-bold border-0 stats-header-dark p-3 fs-5">
+            <div className="card-header fw-bold border-0 p-3 fs-5">
                 내가 등록한 퀴즈
+            </div>
+             {/* 페이지네이션 */}
+            <div className ="row mt-1">
+                <div className="col-6 offset-3">
+                     <Pagination
+                        page={addPage}
+                        totalPage={addPageData.totalPage}
+                        blockStart={addPageData.blockStart}
+                        blockFinish={addPageData.blockFinish}
+                        onPageChange={setAddPage}
+                    />
+                </div>
             </div>
             <div className="table-responsive">
                 <table className="table">
@@ -142,7 +176,7 @@ export default function MemberMypage(){
                                 <td className="text-truncate quiz-question">
                                    <Link className="quiz-link fs-5" to={`/contents/detail/${addQuiz.quizContentsId}`}> [ {addQuiz.contentsTitle} ]</Link> 
                                     <br/>
-                                    <Link className="quiz-link fs-6 text-white" to={`/member/mypage/quiz/detail/${addQuiz.quizContentsId}`}> {addQuiz.quizQuestion}</Link> 
+                                    <Link className="quiz-link fs-6 text-white" to={`/member/mypage/quiz/detail/${addQuiz.quizId}`}> {addQuiz.quizQuestion}</Link> 
                                 </td>
                                 <td className="quiz-normal">{addQuiz.quizSolveCount}</td>
                                 <td className={`text-truncate ${addQuiz.quizAnswer==="1" ? "quiz-answer" : "quiz-option"}`}>{addQuiz.quizQuestionOption1}</td>
@@ -153,12 +187,13 @@ export default function MemberMypage(){
                                                 <td className={`text-truncate ${addQuiz.quizAnswer==="4" ? "quiz-answer" : "quiz-option"}`}>{addQuiz.quizQuestionOption4}</td>
                                             </>
                                         )}
-                                <td className="quiz-normal">{addQuiz.correctRate * 100}%</td>
+                                <td className="quiz-normal">{(addQuiz.correctRate * 100).toFixed(2)}%</td>
                             </tr>
                     ))}
                     </tbody>
             </table>
             </div>
+
         </div>
 
 </>)
