@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { loginIdState, loginNicknameState } from "../../utils/jotai";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { FaChartBar } from "react-icons/fa";
@@ -14,19 +14,47 @@ export default function MemberMypage(){
     const [answerQuizRate, setAnswerQuizRate] = useState([]);
     const [addQuizList, setAddQuizList] = useState([]);
     
+    const [answerPage, setAnswerPage] = useState(1);
+    const [answerTotalPage, setAnswerTotalPage] = useState(1);
+    const [addPage, setAddPage] = useState(1);
+    const [addPageData, setAddPageData] = useState({
+        page : 1,size : 10,  totalCount : 0, totalPage : 0, blockStart : 1, blockFinish : 1
+    });
 
     //callback 
     const loadData = useCallback(async()=>{
         const answerList = await axios.get(`/member/myanswerquiz/${loginId}`);
         setAnswerQuizList(answerList.data);
-        const addList = await axios.get(`/member/myaddquiz/${loginId}`);
-        setAddQuizList(addList.data);
+        const addList = await axios.get(`/member/myaddquiz/${loginId}/${addPage}`);
+        setAddQuizList(addList.data.list);
+        setAddPageData(addList.data.pageVO);
         const rateList = await axios.get(`/member/myanswerRate/${loginId}`);
         setAnswerQuizRate(rateList.data);
+    },[loginId, addPage]);
 
-        console.log("add",addList);
-        console.log("answer",answerList);
-    },[loginId]);
+    // 페이지네이션 - 이전 버튼
+    const movePrevBlock = useCallback(()=>{
+        const prevPage = addPageData.blockStart - 1;
+        setAddPage(prevPage < 1 ? 1 : prevPage);
+        }
+    )
+    // 페이지네이션 - 다음 버튼
+    const moveNextBlock = useCallback(()=>{
+        const nextPage = addPageData.blockFinish + 1;
+        setAddPage(
+            nextPage > addPageData.totalPage ? addPageData.totalPage : nextPage
+        );
+        }
+    )
+    // 페이지네이션 - 페이지 계산
+    const pageNumbers=useMemo(()=>{
+        if( !addPageData.totalPage) return [];
+        return Array.from(
+            { length: addPageData.blockFinish - addPageData.blockStart + 1 },
+            (_, i) => addPageData.blockStart + i
+        );
+    }, [addPageData.blockFinish, addPageData.blockStart, addPageData.blockTotalPage]);
+
 
    
     useEffect(()=>{
@@ -161,6 +189,33 @@ export default function MemberMypage(){
                     ))}
                     </tbody>
             </table>
+            </div>
+            {/* 페이지네이션 */}
+            <div className ="row mt-1">
+                <div className="col-6 offset-3">
+                     <nav aria-label="Page navigation">
+                        <ul className="pagination">
+                            {/* 이전 버튼 */}
+                            <li className="page-item">
+                                <button className="page-link" disabled={addPageData.blockStart === 1}
+                                        onClick={movePrevBlock}>◀</button>
+                            </li>
+                            {/* 페이지 번호 */}
+                                    {pageNumbers.map(pageNum=>(
+                                    <li key={pageNum} className={`page-item ${addPage === pageNum ? "active" : ""}`}>
+                                        <button className="page-link" onClick={() => setAddPage(pageNum)}>
+                                            {pageNum}
+                                        </button>
+                                    </li>
+                                    ))}
+                            {/* 다음 버튼 */}
+                            <li className="page-item">
+                                <button className="page-link" disabled={addPageData.blockFinish >= addPageData.totalPage}
+                                        onClick={moveNextBlock}>▶</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
 
