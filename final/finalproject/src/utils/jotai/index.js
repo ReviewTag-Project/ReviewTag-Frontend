@@ -49,10 +49,6 @@ export const currentQuizIndexAtom = atom(0);
 //사용자 답안 저장소 { quizId: "정답값" }
 export const userAnswersAtom = atom({});
 
-<<<<<<< HEAD
-// 4. 퀴즈 게임 모달 표시 여부 (전역에서 제어하고 싶을 때 사용)
-export const quizModalShowAtom = atom(false);
-=======
 //퀴즈 게임 모달 표시 여부
 export const quizModalShowAtom = atom(false);
->>>>>>> origin/main
+
