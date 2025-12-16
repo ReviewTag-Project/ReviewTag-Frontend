@@ -24,8 +24,8 @@ export default function MemberMypage(){
         const rateList = await axios.get(`/member/myanswerRate/${loginId}`);
         setAnswerQuizRate(rateList.data);
 
-        console.log(addList);
-        console.log(answerList);
+        console.log("add",addList);
+        console.log("answer",answerList);
     },[loginId]);
 
    
@@ -73,8 +73,10 @@ export default function MemberMypage(){
                     </div>
                     <div className="col-3 p-0 fs-bold rate-bar">
                         <div className="rate-fill fs-6 text-dark" style={{ width: `${answerQuizRate.correctRate * 100}%` }}>
-                            {(answerQuizRate.correctRate*100).toFixed(2)} % 
                         </div>
+                        <span className="rate-text">
+                            {(answerQuizRate.correctRate * 100).toFixed(2)}%
+                        </span>
                     </div>
                 </div>
                 ))}
@@ -104,7 +106,7 @@ export default function MemberMypage(){
                                 <Link className="quiz-link" to={`/contents/detail/${answerQuiz.quizContentsId}`}>{answerQuiz.contentsTitle}</Link>
                             </td>
                             <td className="text-truncate quiz-question">
-                                <Link className="quiz-link text-white" to={`/member/mypage/quiz/detail/${answerQuiz.quizContentsId}`}>{answerQuiz.quizQuestion}</Link>
+                                <Link className="quiz-link text-white" to={`/member/mypage/quiz/detail/${answerQuiz.quizLogQuizId}`}>{answerQuiz.quizQuestion}</Link>
                             </td>
                             {answerQuiz.quizLogIsCorrect==="Y" ? (
                                 <td className="quiz-option quiz-correct">O</td>
@@ -112,7 +114,8 @@ export default function MemberMypage(){
                                 <td className="quiz-option quiz-wrong">X</td>
                             )}
                             <td className="rate-bar ">
-                                <div className="rate-fill fs-6 text-light d-flex text-nowrap" style={{ width: `${answerQuiz.correctRate * 100}%` }}>{(answerQuiz.correctRate * 100).toFixed(2)}%</div>
+                                <div className="rate-fill fs-6d-flex text-nowrap" style={{ width: `${answerQuiz.correctRate * 100}%` }}>{(answerQuiz.correctRate * 100).toFixed(2)}%</div>
+                                <span className="rate-text"></span>
                             </td>
                         </tr>
                     ))}
@@ -142,7 +145,7 @@ export default function MemberMypage(){
                                 <td className="text-truncate quiz-question">
                                    <Link className="quiz-link fs-5" to={`/contents/detail/${addQuiz.quizContentsId}`}> [ {addQuiz.contentsTitle} ]</Link> 
                                     <br/>
-                                    <Link className="quiz-link fs-6 text-white" to={`/member/mypage/quiz/detail/${addQuiz.quizContentsId}`}> {addQuiz.quizQuestion}</Link> 
+                                    <Link className="quiz-link fs-6 text-white" to={`/member/mypage/quiz/detail/${addQuiz.quizId}`}> {addQuiz.quizQuestion}</Link> 
                                 </td>
                                 <td className="quiz-normal">{addQuiz.quizSolveCount}</td>
                                 <td className={`text-truncate ${addQuiz.quizAnswer==="1" ? "quiz-answer" : "quiz-option"}`}>{addQuiz.quizQuestionOption1}</td>
@@ -153,7 +156,7 @@ export default function MemberMypage(){
                                                 <td className={`text-truncate ${addQuiz.quizAnswer==="4" ? "quiz-answer" : "quiz-option"}`}>{addQuiz.quizQuestionOption4}</td>
                                             </>
                                         )}
-                                <td className="quiz-normal">{addQuiz.correctRate * 100}%</td>
+                                <td className="quiz-normal">{(addQuiz.correctRate * 100).toFixed(2)}%</td>
                             </tr>
                     ))}
                     </tbody>
