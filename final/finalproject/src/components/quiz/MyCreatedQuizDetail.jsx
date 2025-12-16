@@ -124,7 +124,7 @@ export default function MyCreatedQuizDetail() {
                     className="btn btn-outline-light me-3"
                     onClick={() => navigate(-1)}
                 >
-                    <FaArrowLeft /> 목록으로
+                    <FaArrowLeft /> 이전으로
                 </button>
                 <h3 className="mb-0 fw-bold">✍️ 퀴즈 상세페이지</h3>
             </div>
