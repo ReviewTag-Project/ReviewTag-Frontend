@@ -19,6 +19,7 @@ import MemberMypage from "./member/MemberMypage";
 import MemberMyquiz from "./member/MemberMyquiz";
 import MemberMycontent from "./member/MemberMycontent";
 import MemberMyfavorite from "./member/MemberMyfavorite";
+import MemberMyBoard from "./member/MemberMyBoard";
 import MemberMyinfo from "./member/MemberMyinfo";
 import MemberMyreview from "./member/MemberMyreview";
 import MemberEdit from "./member/MemberEdit";
@@ -102,13 +103,14 @@ export default function Content() {
                     <Route path="/member/join" element={<MemberJoin/>}></Route>
                     <Route path="/member/joinFinish" element={<MemberJoinFinish/>}></Route>
                     <Route path="/member/login" element={<MemberLogin/>}></Route>
-                    <Route path="/member/mypage/" element={<MemberMypage/>}>
-                        <Route path="/member/mypage/myinfo/:loginId" element={<MemberMyinfo/>}> </Route>
-                        <Route path="/member/mypage/myquiz/:loginId" element={<MemberMyquiz/>}> </Route>
-                        <Route path="/member/mypage/mycontent/:loginId" element={<MemberMycontent/>}> </Route>
-                        <Route path="/member/mypage/myfavorite/:loginId" element={<MemberMyfavorite/>}> </Route>
-                        <Route path="/member/mypage/myreview/:loginId" element={<MemberMyreview/>}> </Route>
-                        <Route path="/member/mypage/edit/:loginId" element={<MemberEdit/>}></Route>
+                    <Route path="/member/mypage/" element={<Private><MemberMypage/></Private>}>
+                        <Route path="/member/mypage/myinfo/:loginId" element={<Private><MemberMyinfo/></Private>}> </Route>
+                        <Route path="/member/mypage/myquiz/:loginId" element={<Private><MemberMyquiz/></Private>}> </Route>
+                        <Route path="/member/mypage/myboard/:loginId" element={<Private><MemberMyBoard/></Private>}> </Route>
+                        <Route path="/member/mypage/mycontent/:loginId" element={<Private><MemberMycontent/></Private>}> </Route>
+                        <Route path="/member/mypage/myfavorite/:loginId" element={<Private><MemberMyfavorite/></Private>}> </Route>
+                        <Route path="/member/mypage/myreview/:loginId" element={<Private><MemberMyreview/></Private>}> </Route>
+                        <Route path="/member/mypage/edit/:loginId" element={<Private><MemberEdit/></Private>}></Route>
                         <Route path="/member/mypage/password/:loginId" element={<MemberEditPassword/>}></Route>
                         <Route path="/member/mypage/quiz/detail/:quizId" element={<MyCreatedQuizDetail />} />
                     </Route>
@@ -149,15 +151,13 @@ export default function Content() {
                     <Route path="*" element={<TargetNotfound/>}></Route>
 
                     {/* 관리자 페이지 */}
-                    <Route path="/admin" element={<AdminMain />}>
-                        <Route index element={<AdminMemberPage/>}></Route>
-                        <Route path="/admin/member" element={<AdminMemberPage />} />
+                    <Route path="/admin" element={<Admin><AdminMain /></Admin>}>
+                        <Route index element={<Admin><AdminMemberPage/></Admin>}></Route>
+                        <Route path="/admin/member" element={<Admin><AdminMemberPage /></Admin>} />
                         {/* <Route path="review" element={<AdminReviewPage />} /> */}
-                        <Route path="/admin/member/:memberId" element={<AdminMemberDetail />} />
-                        <Route path="/admin/quiz" element={<AdminQuizPage />} />
-                           <Route path="/admin/point" element={<AdminPoint />} />
-                            <Route path="/admin/dailyquiz" element={<AdminDailyQuiz />} />
-                        {/* <Route path="point" element={<AdminPointPage />} /> */}
+                        <Route path="/admin/member/:memberId" element={<Admin><AdminMemberDetail /></Admin>} />
+                        <Route path="/admin/quiz" element={<Admin><AdminQuizPage /></Admin>} />
+         
                     </Route>
                 </Routes>
             </div>

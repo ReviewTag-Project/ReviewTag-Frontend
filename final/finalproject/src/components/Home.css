@@ -12,3 +12,15 @@
     background-color: #212529;
 }
 
+div {
+    user-select: none;
+}
+
+div input,
+div textarea,
+div span,
+div Link
+div h1, div h2, div h3, div h4, div h5, div h6
+div [contenteditable="true"] {
+    user-select: text;
+}
