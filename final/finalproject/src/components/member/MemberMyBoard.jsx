@@ -101,8 +101,8 @@ export default function MemberMyBoard(){
 
     //render
     return(<>
+    <h1 className="text-center mt-4 mb-5"> {loginNickname}님의 <span className="text-info">작성 게시글</span></h1>
     <div className="container mt-5">
-        <h1 className="text-center mt-4 mb-5"> {loginNickname}님의 <span className="text-info">게시글</span></h1>
     {/* 게시글 목록 */}
         <div className="shadow-sm border-0 rounded-4 overflow-hidden mt-2">
             <div className="table-responsive">
