@@ -139,13 +139,7 @@ return(<>
                             <FaRankingStar className="fs-4"/>
                             {/* <span>랭킹</span> */}
                         </Link>
-                    </li>
-                    <li className="nav-item" onClick={closeMenu}>
-                        <Link className="nav-link"  to="/point/main">
-                            <TbMoneybag className="fs-4"/>
-                            {/* <span>포인트</span> */}
-                        </Link>
-                    </li>                
+                    </li>          
                 </ul>
                  <ul className="navbar-nav ms-auto">
                 {/* 우측 메뉴 */}
@@ -162,11 +156,11 @@ return(<>
 
                     {isLogin === true ? (<>  {/* 로그인 시 나와야 하는 화면 */}
 
-                    {/* 하트 표시(누르면 포인트 상점으로 이동) */}
+                    {/* 주머니 (누르면 포인트 상점으로 이동) */}
                     {!isAdmin && (
                         <li className="nav-item" onClick={closeMenu}>
                             <Link className="nav-link"  to="/point/main">
-                                <FaHeart className="text-danger me-2" />
+                                <TbMoneybag className="text-danger me-2" />
                                 <span className="fw-bold text-light">{heart} / 5</span>
                             </Link>
                         </li>
