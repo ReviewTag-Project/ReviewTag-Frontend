@@ -17,4 +17,8 @@ export default function Private({ children }) {
 
     //render
     return isLogin === true ? children : <Navigate to={"/account/login"}/>;
+    // return isLogin === true   ? children   : <Navigate to="/member/login" replace />;
+
+
+
 }

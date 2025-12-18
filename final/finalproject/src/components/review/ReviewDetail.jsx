@@ -268,9 +268,10 @@ export default function ReviewDetail() {
     }
     //가격 입력창 제어 함수
     const changeNum = useCallback((e) => {
-        const regex = /[^0-9]+/g;
+       const regex = /[^0-9]+/g;
         const replacement = e.target.value.replace(regex, "");
-        const number = replacement.length == 0 ? "" : parseInt(replacement);
+        let number = replacement.length == 0 ? "" : parseInt(replacement);
+        if(number > 50000) number = 50000;
 
         const formattedNumber = number === 0 ? "" : number.toLocaleString('ko-KR');
         setPrice(formattedNumber);
@@ -349,6 +350,10 @@ export default function ReviewDetail() {
 
         axios.patch(`/review/${contentsId}/${reviewNo}`, payload)
             .then(() => {
+                if(reviewValid || invalidRegex) {
+                    toast.error("감상을 10글자 이상 작성해주세요");
+                    return;
+                }
                 toast.success("리뷰 수정 완료");
                 setReview(prev => ({
                     ...prev,
@@ -392,14 +397,14 @@ export default function ReviewDetail() {
 
             try {
             //API 호출
-            await axios.post("/review/report/");
+            await axios.post("/review/report/", payload);
 
             //성공 처리
             toast.success("신고가 정상적으로 접수되었습니다.");
             setReportReason(""); // 선택 초기화
             setOtherReason("");  // 내용 초기화
             closeModal3();       // 모달 닫기
-
+            console.log("신고 성공");
         } catch (error) {
             console.error("신고 전송 실패:", error);
             
@@ -430,6 +435,19 @@ export default function ReviewDetail() {
     const relHighLevel = useMemo(()=> { 
         return rel >= 50;
     },[rel])
+
+    //수정 조건
+    const reviewValid = useMemo(() => {
+        const regex = /^(?=.{10,})(?!.*([ㄱ-ㅎㅏ-ㅣ])\1{5,}).*$/;
+        return regex.test(review.reviewText);
+    }, [review.reviewText]);
+
+    const invalidRegex = /([ㄱ-ㅎㅏ-ㅣ])\1{4,}/;
+    const reviewClassInValid = useMemo(() => {
+        return invalidRegex.test(review.reviewText);
+    }, [review.reviewText]);
+
+
 
     //render
     return (<>
