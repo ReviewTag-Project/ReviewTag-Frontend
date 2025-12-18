@@ -81,7 +81,8 @@ export default function Content() {
 
                     {/* 회원 페이지 */}
                     <Route path="/point/main" element={<PointMain/>}></Route>
-                    <Route path="/point/ranking" element={<PointRanking/>}></Route>
+                    {/* pointRanking 오류 생겨서 잠깐 주석처리 */}
+                    {/* <Route path="/point/ranking" element={<PointRanking/>}></Route> */}
                     {/* 게시글 페이지 */}
                     <Route path="/board/list" element={<BoardList/>}></Route>
                     <Route path="/board/List/:contentsId" element={<BoardContentsList/>}></Route>

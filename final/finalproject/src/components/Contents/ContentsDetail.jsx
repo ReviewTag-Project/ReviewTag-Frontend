@@ -112,7 +112,7 @@ export default function ContentsDetail() {
         setIsLoading(true);
         try {
             const { data } = await axios.get(`/review/list/${contentsId}`);
-            // console.log("넘어오는데이터:", data);
+            console.log("넘어오는데이터:", data);
             const reviewlist = [
                 ...data.map(review => ({ ...review }))
             ];
@@ -383,6 +383,22 @@ export default function ContentsDetail() {
             closeModal3();
         }, [reportReason, otherReason])
 
+        // console.log("리뷰 데이터:", review);
+        //신뢰도 레벨
+        const rel = review?.memberReliability ?? 0;
+
+        const relRowLevel = useMemo(() => {
+            return rel >= 6 && rel <= 19;
+        }, [rel])
+
+        const relMiddleLevel = useMemo(() => {
+            return rel >= 20 && rel <= 49;
+        }, [rel])
+
+        const relHighLevel = useMemo(() => {
+            return rel >= 50;
+        }, [rel])
+
 
         //render
         return (
@@ -394,10 +410,19 @@ export default function ContentsDetail() {
                         <div className="d-flex align-items-center w-100 mt-2">
                             {/* 왼쪽 */}
                             <h4 className="text-light">
-                                닉네임({review.reviewWriter})
-                                {/* <span className="ms-3 trust"><FaCheckCircle /></span> */}
-                                <span className="ms-3" style={{color:"#00ff55ff"}}>멤버신뢰도 {realiability} </span>
-                                {review.reviewEtime && " (수정됨)"}
+                                <span style={{ fontSize: "21px", fontWeight: "bold" }}>{review.memberNickname}</span>
+                                <span style={{ fontSize: "20px", fontWeight: "700", color: "#acacacff" }}>{review.reviewEtime && " (수정됨)"}</span>
+
+                                {relRowLevel && (
+                                    <span className="listRel ms-3">🟢 활동 리뷰어</span>
+                                )}
+                                {relMiddleLevel && (
+                                    <span className="listRel2 ms-3">🔵 신뢰 리뷰어</span>
+                                )}
+                                {relHighLevel && (
+                                    <span className="listRel2 ms-3">🔷 검증된 리뷰어 </span>
+                                )}
+
                             </h4>
 
                             {/* 오른쪽 - 자동으로 밀기 */}
@@ -533,7 +558,7 @@ export default function ContentsDetail() {
                         to={`/review/${contentsId}/${review.reviewNo}`}>
 
                         {/* 별점 */}
-                        <div className="mt-3 d-flex align-items-center">
+                        <div className="mt-2 d-flex align-items-center">
                             {[1, 2, 3, 4, 5].map((num) => (
                                 <FaStar key={num} style={{ color: num <= review.reviewRating ? "#ffc107" : "#979797ff", marginRight: "2px" }} />
                             ))}
@@ -548,7 +573,7 @@ export default function ContentsDetail() {
                                     🚨 스포일러가 포함된 리뷰입니다. (클릭하여 보기)
                                 </p>
                             ) : (
-                                <p className="break-word text-light text-truncate">{review.reviewText}</p>
+                                <p className="break-word text-light text-truncate" style={{ fontWeight: "bold" }}>{review.reviewText}</p>
                             )}
                         </div>
                         <hr className="HR mt-5" />
@@ -611,7 +636,7 @@ export default function ContentsDetail() {
 
                             {/* 이미지 영역 */}
                             <div className="col-12 col-md-4 p-4 black-bg-wrapper text-light rounded">
-                                <img src={getPosterUrl(contentsDetail.contentsPosterPath)} style={{ height: "480px", objectFit: "cover", borderRadius: "4px", }}
+                                <img src={getPosterUrl(contentsDetail.contentsPosterPath)} style={{ height: "480px", objectFit: "cover", borderRadius: "4px" }}
                                     alt={`${contentsDetail.contentsTitle} 포스터`} className="text-center w-100" />
                                 <div>
                                     <div className="mt-3">
@@ -631,7 +656,7 @@ export default function ContentsDetail() {
 
                             {/* 텍스트 영역 */}
                             <div className="col-9 col-md-7 ms-4 mt-4 text-light">
-                                <h3 className="text-light">{contentsDetail.contentsTitle}</h3>
+                                <h3 className="text-light" style={{ fontWeight: "bold" }}>{contentsDetail.contentsTitle}</h3>
                                 <div className="mt-5">
                                     <h5>평균 점수</h5>
                                 </div>
@@ -724,9 +749,10 @@ export default function ContentsDetail() {
                             <div className="col mt-3">
                                 <Link className="text-decoration-none link-body-emphasis text-light"
                                     to={`/review/${contentsId}/${myReview.reviewNo}`}>
-                                    <div className="d-flex justify-content-between mt-1">
-                                        <h4 className="text-light">
-                                            {contentsDetail.contentsTitle}{myReview.reviewEtime ? " (수정됨)" : ""}
+                                    <div className="d-flex justify-content-between mt-1 align-items-center">
+                                        <h4 className="text-light" style={{ fontWeight: "bold" }}>
+                                            <span style={{ color: "#d4dcf8ff" }}>{contentsDetail.contentsTitle}</span>
+                                            <span className="ms-1" style={{ color: "#acacacff", fontSize: "20px", fontWeight: "700" }} >{myReview.reviewEtime ? " (수정됨)" : ""}</span>
                                         </h4>
                                         <p className="text-light me-2 mb-1">{myReviewDate}</p>
                                     </div>
@@ -743,7 +769,7 @@ export default function ContentsDetail() {
 
                                     {/* 내용 (스포일러) */}
                                     <div className="mt-4">
-                                        <p className="break-word text-light text-truncate">{myReview.reviewText}</p>
+                                        <p className="break-word text-light text-truncate" style={{ fontWeight: "bold" }}>{myReview.reviewText}</p>
                                     </div>
                                     <hr className="HR mt-5" />
                                 </Link>
