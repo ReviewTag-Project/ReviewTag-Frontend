@@ -342,17 +342,17 @@ export default function ReviewDetail() {
 
     //수정 조건
     const reviewValid = useMemo(() => {
-        const regex = /^(?=.{10,})(?!.*([ㄱ-ㅎㅏ-ㅣ])\1{5,}).*$/;
+        const regex = /^(?=[\s\S]{10,})(?!.*([ㄱ-ㅎㅏ-ㅣ])\1{5,})[\s\S]*$/;
         return regex.test(review.reviewText);
     }, [review.reviewText]);
 
-    const invalidRegex = /([ㄱ-ㅎㅏ-ㅣ])\1{4,}/;
+    const invalidRegex = /([ㄱ-ㅎㅏ-ㅣ])\1{5,}/;
     const reviewClassInValid = useMemo(() => {
         return invalidRegex.test(review.reviewText);
     }, [review.reviewText]);
 
 
-    
+
     const sendData = useCallback(() => {
         if (!reviewValid || reviewClassInValid) {
             toast.error("감상을 10글자 이상 작성해주세요");
