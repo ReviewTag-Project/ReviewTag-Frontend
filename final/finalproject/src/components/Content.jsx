@@ -56,6 +56,7 @@ import MemberProfileInfo from "./member/MemberPofileInfo";
 import MemberProfileReview from "./member/MemberProfileReview";
 import Private from "./guard/Private";
 import Admin from "./guard/Admin";
+import AdminInventory from "./admin/AdminInventory";
 export default function Content() {
     return (<>
 
@@ -158,7 +159,7 @@ export default function Content() {
                         <Route path="/admin/quiz" element={<Admin><AdminQuizPage /></Admin>} />
                         <Route path="/admin/dailyquiz" element={<Admin><AdminDailyQuiz/></Admin>} />
                         <Route path="/admin/point" element={<Admin><AdminPoint/></Admin>}/>
-
+                        <Route path="/admin/inventory" element={<Admin><AdminInventory/></Admin>}/>
                     </Route>
                 </Routes>
             </div>
