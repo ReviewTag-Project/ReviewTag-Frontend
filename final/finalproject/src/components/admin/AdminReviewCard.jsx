@@ -70,7 +70,7 @@ export default function AdminReviewCard({ reviewData, refreshList }) {
                 <div className="d-flex justify-content-between align-items-center flex-wrap">
                     {/* 왼쪽 그룹 */}
                     <div className="d-flex gap-2 align-items-center">
-                        <span>작성자: <strong>{reviewData.reviewWriter}</strong></span>
+                        <span>작성자: <strong>{reviewData.memberNickname}({reviewData.reviewWriter})</strong></span>
                         <span className="text-secondary opacity-50">|</span>
                         <span>
                             신고일: {new Date(reviewData.reviewReportDate).toLocaleDateString()}
@@ -112,7 +112,7 @@ export default function AdminReviewCard({ reviewData, refreshList }) {
                         <button
                             className="ms-2 btn btn-sm btn-outline-primary py-0 d-flex align-items-center gap-1 text-nowrap"
                             style={{ fontSize: '0.8rem' }}
-                            // onClick={OtherText}
+                            onClick={OtherText}
                         >
                             📝 내용 보기 :  
                         </button>
@@ -121,7 +121,7 @@ export default function AdminReviewCard({ reviewData, refreshList }) {
 
                 
                 {openReviewId === reviewData.reviewId && (
-                    <div className="mt-2 p-2 border rounded bg-light text-dark">
+                    <div className="mt-2 p-2 rounded bg-secondary ">
                         {reviewData.reviewReportContent}
                     </div>
                 )}
