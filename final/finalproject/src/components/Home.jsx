@@ -316,7 +316,7 @@ export default function Home() {
             </div>
 
             {/* 검색영역 */}
-            <div className="row mt-2 justify-content-center">
+            <div className="row mt-4 justify-content-center">
                 <div className="col-12 col-md-5 d-flex text-nowrap">
                     <div className="input-group search-wrapper">
                         {/* 검색창 */}
