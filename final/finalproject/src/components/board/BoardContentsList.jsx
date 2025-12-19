@@ -81,6 +81,7 @@ export default function BoardContentsList() {
     //rendar
     return (<>
 
+<<<<<<< HEAD
         <div className="container mt-5">
             <div className="d-flex align-items-center mb-4 mt-4">
                 <h2 className="fw-bold text-white mb-0" 
@@ -88,6 +89,11 @@ export default function BoardContentsList() {
                     style={{cursor:"pointer"}}>
                 자유게시판
                 </h2>
+=======
+        <div className="mt-4 quizCard quiz-dark-card text-center">
+            <div className="card-header fw-bold border-0 stats-header-dark p-3 fs-5">
+                게시글
+>>>>>>> origin/main
             </div>
 
             <div className="row">

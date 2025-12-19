@@ -40,7 +40,7 @@ export default function AdminMain() {
                         👥 회원 관리
                     </NavLink>
                     
-                    <NavLink to="/admin/review" className="list-group-item list-group-item-action admin-menu-item" onClick={closeSidebar}>
+                    <NavLink to="/admin/review/report" className="list-group-item list-group-item-action admin-menu-item" onClick={closeSidebar}>
                         📝 리뷰 관리
                     </NavLink>
                     
@@ -58,6 +58,9 @@ export default function AdminMain() {
 
                     <NavLink to="/admin/dailyquiz" className="list-group-item list-group-item-action admin-menu-item" onClick={closeSidebar}>
                         📚 데일리 퀴즈 관리
+                    </NavLink>
+                    <NavLink to="/admin/inventory" className="list-group-item list-group-item-action admin-menu-item" onClick={closeSidebar}>
+                        🎒 인벤토리 관리
                     </NavLink>
                 </div>
             </div>

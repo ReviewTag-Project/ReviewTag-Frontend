@@ -5,7 +5,6 @@ import axios from "axios";
 import { FaGift } from "react-icons/fa";
 import { useAtomValue } from "jotai";
 import { loginIdState } from "../../utils/jotai";
-import Donate from "../Point/Donate";
 import { toast } from "react-toastify";
 
 export default function MemberProfileInfo() {
@@ -39,15 +38,45 @@ export default function MemberProfileInfo() {
         return date.substring(0, 16);
     }, [profile]);
 
+    //신뢰도 레벨
+    const rel = profile?.memberReliability ?? 0;
+
+    const relRowLevel = useMemo(() => {
+        return rel >= 6 && rel <= 19;
+    }, [rel])
+
+    const relMiddleLevel = useMemo(() => {
+        return rel >= 20 && rel <= 49;
+    }, [rel])
+
+    const relHighLevel = useMemo(() => {
+        return rel >= 50;
+    }, [rel])
+
     return (<>
-        <h1 className="text-center mt-4"> {profile.memberId}님의 정보</h1>
+        <h1 className="text-center mt-4"> {profile.memberNickname}님의 정보</h1>
 
         <div className="mypage-table-wrapper">
             <table className="table table-hover mypage-table">
                 <tbody>
+                     <tr>
+                        <td>아이디</td>
+                        <td>{profile.memberId}</td>
+                    </tr>
                     <tr>
-                        <td>닉네임</td>
-                        <td>{profile.memberNickname}</td>
+                       <td>닉네임</td> 
+                        <td>
+                            <span>{profile.memberNickname}</span>
+                            {relRowLevel && (
+                                <span className="Rel ms-3">🟢 활동 리뷰어</span>
+                            )}
+                            {relMiddleLevel && (
+                                <span className="Rel2 ms-3">🔵 신뢰 리뷰어</span>
+                            )}
+                            {relHighLevel && (
+                                <span className="Rel2 ms-3">🔷 검증된 리뷰어 </span>
+                            )}
+                        </td>
                     </tr>
                     <tr>
                         <td>등급</td>

@@ -130,8 +130,6 @@ export default function WriteReview() {
         }
     }, [review, loginId, accessToken, contentsId]);
 
-    // setMyReview(reviewData);
-
     const reviewValid = useMemo(() => {
         const regex = /^(?=.{10,})(?!.*([ㄱ-ㅎㅏ-ㅣ])\1{5,}).*$/;
         return regex.test(review.reviewText);
@@ -169,6 +167,10 @@ export default function WriteReview() {
         const replacement = e.target.value.replace(regex, "");
         let number = replacement.length == 0 ? "" : parseInt(replacement);
         if(number > 50000) number = 50000;
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
         const formattedNumber = number === 0 ? "" : number.toLocaleString('ko-KR');
         setPrice(formattedNumber);
 
