@@ -99,7 +99,7 @@ export default function AdminInventory() {
                         <div className="ai-flex-row ai-gap-2">
                             <input className="ai-search-input" placeholder="조회할 유저 ID 입력" value={searchId} onChange={e => setSearchId(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && fetchUserData()} />
                             <button className="ai-btn-main" onClick={fetchUserData} disabled={loading}>
-                                {loading ? <span className="ai-spinner"></span> : "조회"}
+                                {loading ? "로딩..." : "조회"}
                             </button>
                             <button className="ai-btn-success ai-ms-auto" onClick={() => setShowModal(true)} disabled={!searchId}>➕ 자산 수동 지급</button>
                         </div>
@@ -153,18 +153,16 @@ export default function AdminInventory() {
                                     <button className="ai-btn-close" onClick={() => setShowModal(false)}>×</button>
                                 </div>
                                 <div className="ai-modal-body">
-                                    <div className="ai-flex-row ai-gap-2 ai-mb-4">
+                                    <div className="ai-flex-row ai-gap-2 mb-4">
                                         <button className={`ai-btn-tab-sm ${grantTab === "item" ? "active" : ""}`} onClick={() => setGrantTab("item")}>상점 아이템</button>
                                         <button className={`ai-btn-tab-sm ${grantTab === "icon" ? "active" : ""}`} onClick={() => setGrantTab("icon")}>마스터 아이콘</button>
                                     </div>
                                     <div className="ai-grant-grid">
                                         {(grantTab === "item" ? storeItems : masterIcons).map(data => (
-                                            <div className="ai-grant-item" key={grantTab === "item" ? data.pointItemNo : data.iconId}>
-                                                <div className="ai-grant-card">
-                                                    <img src={grantTab === "item" ? data.pointItemSrc : data.iconSrc} className="ai-grant-img" alt="" />
-                                                    <div className="ai-grant-name">{grantTab === "item" ? data.pointItemName : data.iconName}</div>
-                                                    <button className="ai-btn-give" onClick={() => handleGrant(grantTab, grantTab === "item" ? data.pointItemNo : data.iconId, grantTab === "item" ? data.pointItemName : data.iconName)}>지급</button>
-                                                </div>
+                                            <div className="ai-grant-card" key={grantTab === "item" ? data.pointItemNo : data.iconId}>
+                                                <img src={grantTab === "item" ? data.pointItemSrc : data.iconSrc} className="ai-grant-img" alt="" />
+                                                <div className="ai-grant-name">{grantTab === "item" ? data.pointItemName : data.iconName}</div>
+                                                <button className="ai-btn-give" onClick={() => handleGrant(grantTab, grantTab === "item" ? data.pointItemNo : data.iconId, grantTab === "item" ? data.pointItemName : data.iconName)}>지급</button>
                                             </div>
                                         ))}
                                     </div>
@@ -176,4 +174,4 @@ export default function AdminInventory() {
             </div>
         </Admin>
     );
-}
+}   
