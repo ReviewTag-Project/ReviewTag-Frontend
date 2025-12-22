@@ -6,7 +6,8 @@ import { FaGift } from "react-icons/fa";
 import { useAtomValue } from "jotai";
 import { loginIdState } from "../../utils/jotai";
 import { toast } from "react-toastify";
-import Donate from "../point/Donate";
+import Donate from "../Point/Donate";
+
 
 export default function MemberProfileInfo() {
 
