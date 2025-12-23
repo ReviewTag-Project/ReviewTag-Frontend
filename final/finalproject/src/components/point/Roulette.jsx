@@ -72,8 +72,7 @@ export default function Roulette({ refreshPoint: rouletteRefreshPoint, setTab: r
             const rouletteAdditionalSpins = 360 * 10; 
             
             const rouletteTargetRotation = rouletteRotation + rouletteAdditionalSpins - (rouletteResultIndex * rouletteSegmentAngle) - (rouletteRotation % 360);
-            setPointRotation(rouletteTargetRotation);
-
+           setRouletteRotation(rouletteTargetRotation);
             setTimeout(async () => {
                 const rouletteWinItem = rouletteItems[rouletteResultIndex];
                 
