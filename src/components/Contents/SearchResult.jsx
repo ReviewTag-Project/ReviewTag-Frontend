@@ -1,129 +1,152 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import "./SearchAndSave.css";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { Link } from "react-router-dom";
+
 
 const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
-export default function SearchResult() {
-    // 1. URL 파라미터 가져오기
-    const { query } = useParams();
-
-    const [resultList, setResultList] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [statusMessage, setStatusMessage] = useState("");
-
-    const navigate = useNavigate();
-
-    // 2. 포스터 URL 생성 함수
-    const getPosterUrl = useCallback((path) => {
-        return path ? `${TMDB_IMAGE_BASE_URL}${path}` : 'https://placehold.co/500x750/cccccc/333333?text=No+Image';
-    }, []);
-
-    // 3. 검색 실행 함수
-    const handleSearch = useCallback(async (searchQuery) => {
-        if (!searchQuery || searchQuery.trim().length === 0) return;
-
-        setIsLoading(true);
-        setStatusMessage("TMDB에서 컨텐츠 검색 중..");
-        setResultList([]);
-
-        try {
-            const response = await axios.get("/tmdb/search", { params: { query: searchQuery } });
-            setResultList(response.data);
-
-            if (response.data.length === 0) {
-                setStatusMessage(`"${searchQuery}" 와 일치하는 검색 결과를 찾을 수 없습니다.`);
-            } else {
-                setStatusMessage(`"${searchQuery}" 에 대한 검색 결과 : ${response.data.length} 개`);
+export default function SlideContents() {
+    // 슬라이드 setting (반응형 추가)
+    const settings = {
+        dots: false,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 4,
+        slidesToScroll: 4,
+        autoplay: true,
+        autoplaySpeed: 500,
+        responsive: [ // 화면 크기에 따른 설정
+            {
+                breakpoint: 1024,
+                settings: { slidesToShow: 3, slidesToScroll: 3 }
+            },
+            {
+                breakpoint: 768,
+                settings: { slidesToShow: 2, slidesToScroll: 2 }
+            },
+            {
+                breakpoint: 480,
+                settings: { slidesToShow: 1, slidesToScroll: 1 }
             }
-        } catch (error) {
-            console.error("오류발생 : ", error);
-            setStatusMessage("검색 중 서버 오류 발생");
-        } finally {
-            setIsLoading(false);
-        }
+        ]
+    };
+
+    //state
+    const [tvList, setTvList] = useState([]);
+    const [movieList, setMovieList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    //effect
+    useEffect(() => {
+        loadTVData();
+        loadMovieData();
     }, []);
 
-    // 4. query 변경 시 자동 검색
-    useEffect(() => {
-        if (query) {
-            handleSearch(query);
-        }
-    }, [query, handleSearch]);
-
-    // 5. [핵심 수정] 컨텐츠 선택 시 -> DB 저장 후 -> 상세 페이지로 이동
-    const handleSelectAndSave = useCallback(async (contents) => {
-        // 이미 로딩중이면 중복 클릭 방지
-        if(isLoading) return; 
-        
+    //callback
+    const loadTVData = useCallback(async () => {
         setIsLoading(true);
-
         try {
-            // (1) DB에 저장 (또는 업데이트) 요청
-            const response = await axios.post("/tmdb/save", {
-                contentsId: contents.contentsId,
-                type: contents.type
-            });
-
-            // (2) 저장된 컨텐츠의 ID를 받아서 상세 페이지로 이동
-            // response.data에는 저장된 ContentsDetailDto가 들어있다고 가정
-            const savedContentsId = response.data.contentsId;
-            
-            navigate(`/contents/detail/${savedContentsId}`);
-
-        } catch (error) {
-            console.error("저장 및 이동 실패 : ", error);
-            alert("컨텐츠 정보를 불러오는 데 실패했습니다.");
-        } finally {
-            setIsLoading(false);
+            const { data } = await axios.get("/api/tmdb/contents/list/tv");
+            const tvlist = [
+                ...data.map(tv => ({ ...tv }))
+            ];
+            setTvList(tvlist);
         }
-    }, [isLoading, navigate]);
+        catch (error) {
+            console.log("에러발생 : ", error);
+        }
+        setIsLoading(false);
 
+    }, []);
+    const loadMovieData = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const { data } = await axios.get("/api/tmdb/contents/list/movie");
+            const movielist = [
+                ...data.map(movie => ({ ...movie }))
+            ];
+            setMovieList(movielist);
+        }
+        catch (error) {
+            console.log("에러발생 : ", error);
+        }
+        setIsLoading(false);
+    }, []);
 
-    return (
-        <div className="container">
-            {/* 리스트 화면 */}
-            <div>
-                <div className="row mt-5">
-                    <div className="col">
-                        <p className="text-light fs-4">{statusMessage}</p>
+    //[포스터 이미지 url 생성 함수]
+    const getPosterUrl = useCallback((path) => {
+        return path ?
+            `${TMDB_IMAGE_BASE_URL}${path}`
+            :
+            'https://placehold.co/500x750/cccccc/333333?text=No+Image';
+    }, []);
+
+    const getFormattedDate = useCallback((text) => {
+        return text.substr(0, 10);
+    }, []);
+
+    // [추가] 카드 렌더링을 위한 헬퍼 함수 (코드 중복 방지)
+    const renderCard = (content) => (
+        // [중요] Slider 바로 아래 div에는 col- 클래스를 쓰지 않고 px-2로 간격만 줍니다.
+        <div key={content.contentsId} className="px-2 mb-4">
+            <div className="card h-100 text-white shadow" style={{ backgroundColor: "#2C3A47" }}>
+                <Link className="text-decoration-none link-body-emphasis" to={`/contents/detail/${content.contentsId}`}>
+                    <img
+                        src={getPosterUrl(content.contentsPosterPath)}
+                        className="card-img-top"
+                        alt={content.contentsTitle}
+                        style={{ height: "350px", objectFit: "cover" }}
+                    />
+                    <div className="card-body">
+                        <h5 className="card-title text-truncate text-light">{content.contentsTitle}</h5>
+                        <p className="card-text">
+                            <small className="text-secondary">{getFormattedDate(content.contentsReleaseDate)}</small>
+                            <br />
+                            <span className="badge bg-warning text-dark me-1">
+                                {content.contentsType}
+                            </span>
+                            {content.genreNames && content.genreNames.slice(0, 2).map((g, index) => (
+                                <span key={index} className="badge bg-secondary me-1">
+                                    {g}
+                                </span>
+                            ))}
+                        </p>
                     </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        {resultList.length > 0 ? (
-                            resultList.map(result => (
-                                // 클릭 시 handleSelectAndSave 실행
-                                <div className="simple-item" key={result.contentsId} onClick={() => handleSelectAndSave(result)}>
-                                    <div className="d-flex align-items-center">
-                                        <img src={getPosterUrl(result.posterPath)}
-                                            alt={result.title}
-                                            style={{ width: "70px", height: "95px", objectFit: "cover", borderRadius: "4px" }}
-                                            className="me-3" />
-                                        <div style={{ flex: 1, minWidth: 0 }}>
-                                            <div className="text-light fw-bold fs-5 text-truncate">{result.title}</div>
-                                            <div className="text-light">
-                                                {result.type} • {result.releaseDate}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <span className="text-light">검색 결과를 기다리는 중...</span>
-                        )}
-                    </div>
-                </div>
+                </Link>
             </div>
-            
-            {/* 로딩 표시 (화면 전체를 덮거나 버튼 비활성화 등 처리가 필요하면 추가) */}
-            {isLoading && (
-                <div className="text-center mt-3">
-                    <span className="text-light spinner-border spinner-border-sm me-2"></span>
-                    <span className="text-light">상세 페이지로 이동 중...</span>
-                </div>
-            )}
         </div>
     );
+
+    return (<>
+        <div className="container mt-4"> {/* 전체 컨테이너 추가 */}
+
+            {/* 1. TV 시리즈 슬라이더 */}
+            <div className="mb-5">
+                <h3 className="mb-3 text-white">📺 인기 TV 시리즈</h3>
+                {tvList.length > 0 ? (
+                    <Slider {...settings}>
+                        {tvList.map(tv => renderCard(tv))}
+                    </Slider>
+                ) : (
+                    <p className="text-white">로딩 중이거나 데이터가 없습니다.</p>
+                )}
+            </div>
+
+            {/* 2. 영화 슬라이더 */}
+            <div className="mb-5">
+                <h3 className="mb-3 text-white">🎬 최신 영화</h3>
+                {movieList.length > 0 ? (
+                    <Slider {...settings}>
+                        {movieList.map(movie => renderCard(movie))}
+                    </Slider>
+                ) : (
+                    <p className="text-white">로딩 중이거나 데이터가 없습니다.</p>
+                )}
+            </div>
+        </div>
+
+    </>)
 }
